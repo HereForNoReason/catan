@@ -15,7 +15,6 @@ public class Player {
 	private final Color color;
 	private HashMap<String, Integer> resources;
 	private ArrayList<Road> roads;
-	private int numbKnights = 0;
 	private int numbSettlements = 2;
 	private int victoryPoints = 2;
 	private int numbRoads = 2;
