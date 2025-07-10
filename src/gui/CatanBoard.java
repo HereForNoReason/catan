@@ -1180,7 +1180,10 @@ public class CatanBoard extends JPanel{
 		return output;
 	}
 
-	class AMouseListener extends MouseAdapter{
+    public void setMode(String settle) {
+    }
+
+    class AMouseListener extends MouseAdapter{
 		public void mouseClicked(MouseEvent e) {
 			//System.out.println("Mouse Clicked");
 
