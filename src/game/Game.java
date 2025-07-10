@@ -53,19 +53,15 @@ public class Game {
 	public Player winningPlayer() {
 
 		Player maxVictoryPoints = players.get(0);
-		Player secondMaxVictoryPoints = players.get(0);
 
 		for (Player p : players) {
 
 			if (p.getVictoryPoints() > maxVictoryPoints.getVictoryPoints()) {
 				maxVictoryPoints = p;
 			}
-			else if (p.getVictoryPoints() > secondMaxVictoryPoints.getVictoryPoints()) {
-				secondMaxVictoryPoints = p;
-			}
 		}
 
-		if (maxVictoryPoints.getVictoryPoints() >= 10 && maxVictoryPoints.getVictoryPoints() > secondMaxVictoryPoints.getVictoryPoints()) {
+		if (maxVictoryPoints.getVictoryPoints() >= 10) {
 			return maxVictoryPoints;
 		}
 		else

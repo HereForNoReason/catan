@@ -1,6 +1,7 @@
 package game;
 
 import gui.GameWindow;
+import gui.PlayerSelectionApp;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -17,14 +18,21 @@ public class GameRunner {
 	private static Player winner;
 
 	public static void main(String[] args) {
-		
-		//players.add(new Player("DevMaster",	Color.ORANGE,10,10,10,10,10,9));
-		//players.add(new Player("Batman",	Color.BLACK));
-		//players.add(new Player("Spiderman",	Color.RED));
-		//players.add(new Player("Superman",	Color.BLUE));
-						
+
+		PlayerSelectionApp select = new  PlayerSelectionApp();
+		 numberPlayers = select.getSelectedPlayerCount();
+
+		 players.add(new Player("Player 1", Color.ORANGE, 10,10,10,10,10,10));
+		 players.add(new Player("Player 2", Color.BLACK));
+		 players.add(new Player("Player 3", Color.RED));
+		 players.add(new Player("Player 4", Color.BLUE));
+		 start();
 		numberPlayers = players.size();
-		
+
+
+	}
+
+	public static void start(){
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				GameWindow tmp = new GameWindow(players);

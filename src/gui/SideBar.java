@@ -86,6 +86,7 @@ public class SideBar extends JPanel {
 					GameRunner.setWinner(g.winningPlayer());
 
 					winPanel();
+					return;
 				}
 
 				int roll = g.roll(GameRunner.getCurrentPlayer());
@@ -265,6 +266,7 @@ public class SideBar extends JPanel {
 					GameRunner.setWinner(g.winningPlayer());
 
 					winPanel();
+					return;
 				}
 
 				GameRunner.nextPlayer();
