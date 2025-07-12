@@ -255,7 +255,7 @@ public class Player {
     }
 
     /**
-     * Adds 1 to numbCities
+     *  Increase City count and therefore decrease Settlement count
      */
     public void upCity() {
         numbSettlements--;

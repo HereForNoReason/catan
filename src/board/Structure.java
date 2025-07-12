@@ -4,7 +4,7 @@ import game.Player;
 
 
 /**
- * This is a superclass for Settlement and City
+ * This is a class for cities and settlements
  */
 public class Structure {
 
@@ -27,6 +27,8 @@ public class Structure {
 
     /**
      * This method will give resources of type resType to the owner of the Structure
+     * 1 for settlements
+     * 2 for cities
      *
      * @param resType the type of resource to be given to the owner
      */

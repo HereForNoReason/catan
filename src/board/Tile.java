@@ -6,13 +6,14 @@ package board;
 public class Tile {
 
     private final String type;
-    private int number = 0;
-    private Location location;
-    private boolean hasRobber = false;
     /*
      * Possible values:
      * DESERT, BRICK, WOOL, LUMBER, GRAIN, ORE
      */
+    private int number = 0;
+    private Location location;
+    private boolean hasRobber = false;
+
 
 
     /**

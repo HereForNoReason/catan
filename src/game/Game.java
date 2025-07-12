@@ -87,7 +87,7 @@ public class Game {
      * Allows the given Player to take a card from any Player with a Settlement on the Tile of the given Location
      *
      * @param p      the Player taking a card
-     * @param choice the Location of the Tile
+     * @param choice resource you want to take from given player
      */
     public void takeCard(Player p, Player choice) {
 
@@ -210,7 +210,7 @@ public class Game {
 	}
 
     /**
-     * Buys Road for given Player
+     * Checks if Player is able to buy a Road
      *
      * @param p the given Player
      * @return 0=success, 1=insufficient resources, 2=structure limit reached
@@ -228,6 +228,12 @@ public class Game {
         return 0;
     }
 
+    /**
+     * Buys Road for given Player
+     *
+     * @param p the given Player
+     */
+
     public void buyRoad(Player p) {
         if (canBuyRoad(p) != 0)
             return;
@@ -241,7 +247,7 @@ public class Game {
     }
 
     /**
-     * Buys Settlement for given Player
+     * Checks if the player can buy a Settlement
      *
      * @param p the given Player
      * @return 0=success, 1=insufficient resources, 2=structure limit reached
@@ -259,6 +265,11 @@ public class Game {
 
         return 0;
     }
+    /**
+     * Buys Settlement for given Player
+     *
+     * @param p the given Player
+     */
 
     public void buySettlement(Player p) {
         if (canBuySettlement(p) != 0)
@@ -275,11 +286,12 @@ public class Game {
     }
 
     /**
-     * Buys City for given Player
+     * Checks if the player can buy a City
      *
      * @param p the given Player
      * @return 0=success, 1=insufficient resources, 2=structure limit reached
      */
+
     public int canBuyCity(Player p) {
         // Check Player has sufficient resources
         if (p.getNumberResourcesType("GRAIN") < 2 || p.getNumberResourcesType("ORE") < 3) {
@@ -293,6 +305,12 @@ public class Game {
 
         return 0;
     }
+
+    /**
+     * Buys City for given Player
+     *
+     * @param p the given Player
+     */
 
     public void buyCity(Player p) {
         if (canBuyCity(p) != 0)

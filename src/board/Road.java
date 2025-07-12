@@ -35,7 +35,7 @@ public class Road {
     /**
      * Setter for the Road's owner (only settable if no current owner; i.e., only settable once)
      *
-     * @param p the new owner
+     * @param p is the new owner
      */
     public void setOwner(Player p) {
         if (null == owner)

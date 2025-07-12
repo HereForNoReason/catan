@@ -7,6 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * The starting class which will create and run the game
+ *
+ */
+
 public class GameRunner {
 
     private static Player currentPlayer;
@@ -23,7 +28,12 @@ public class GameRunner {
 
 
     }
-
+    /**
+     * Player enters their name here
+     *
+     * @param id the given Player
+     * @return the chosen name for this Player
+     */
     private static String getPlayerName(int id) {
         String playerName = "";
         String finalPlayerName = playerName;
@@ -34,7 +44,9 @@ public class GameRunner {
         }
         return playerName;
     }
-
+    /**
+     * Starting the game after initial Setup
+     */
     public static void start() {
         SwingUtilities.invokeLater(() -> {
             numberPlayers = select.getSelectedPlayerCount();
@@ -51,35 +63,71 @@ public class GameRunner {
         });
     }
 
+    /**
+     * Getter for current PLayer
+     *
+     * @return Player
+     */
     public static Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * Select the next Player
+     */
     public static void nextPlayer() {
         currentPlayer = players.get((index + 1) % numberPlayers);
         index = (index + 1) % numberPlayers;
     }
-
+    /**
+     * Selects the previous Player
+     */
     public static void prevPlayer() {
         currentPlayer = players.get((index - 1) % numberPlayers);
         index = (index - 1) % numberPlayers;
     }
-
+    /**
+     * Chooses who starts the game
+     */
     public static void setFirstPlayer() {
         currentPlayer = players.get(0);
     }
 
+
+    /**
+     * Gives the Player who won the game
+     * If there is no winner yet this will return null
+     *
+     * @return the Winner / null
+     */
     public static Player getWinner() {
         return winner;
     }
 
+    /**
+     * Setting the winning Player
+     *
+     * @param p the winner
+     */
     public static void setWinner(Player p) {
         winner = p;
     }
 
+    /**
+     * The Amount of Players
+     *
+     * @return amount of Players playing this game
+     */
     public static int getNumbPlayers() {
         return numberPlayers;
     }
+
+    /**
+     * Get Player out of the List
+     *
+     * @param i the position of a single player in the list
+     * @return player at given location
+     */
 
     public static Player getPlayer(int i) {
         return players.get(i);
