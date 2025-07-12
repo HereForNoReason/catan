@@ -51,23 +51,26 @@ public class Game {
 	 * @return winning player
 	 */
 	public Player winningPlayer() {
-		Player winner = null;
-		int maxPoints = 9; // Minimum Punkte zum Gewinnen - 1
 
-		for (Player player : players) {
-			int points = player.getVictoryPoints();
-			if (points > maxPoints) {
-				winner = player;
-				maxPoints = points;
-			} else if (points == maxPoints) {
-				// Bei Gleichstand gibt es keinen Gewinner
-				winner = null;
+		Player maxVictoryPoints = players.get(0);
+		Player secondMaxVictoryPoints = players.get(0);
+
+		for (Player p : players) {
+
+			if (p.getVictoryPoints() > maxVictoryPoints.getVictoryPoints()) {
+				maxVictoryPoints = p;
+			}
+			else if (p.getVictoryPoints() > secondMaxVictoryPoints.getVictoryPoints()) {
+				secondMaxVictoryPoints = p;
 			}
 		}
 
-		return winner;
+		if (maxVictoryPoints.getVictoryPoints() >= 10 && maxVictoryPoints.getVictoryPoints() > secondMaxVictoryPoints.getVictoryPoints()) {
+			return maxVictoryPoints;
+		}
+		else
+			return null;
 	}
-
 
 	/**
 	 * Rolls the die and allocates resources to players
@@ -365,9 +368,9 @@ public class Game {
 	 * @return 0=success, 1=insufficient resources, 2=structure limit reached
 	 */
 	public int buySettlement(Player p) {
+
 		// Check Player has sufficient resources
-		if (p.getNumberResourcesType("BRICK") < 1 || p.getNumberResourcesType("GRAIN") < 1 ||
-				p.getNumberResourcesType("WOOL") < 1 || p.getNumberResourcesType("LUMBER") < 1) {
+		if (p.getNumberResourcesType("BRICK") < 1 || p.getNumberResourcesType("GRAIN") < 1 || p.getNumberResourcesType("WOOL") < 1 || p.getNumberResourcesType("LUMBER") < 1) {
 			return 1;
 		}
 
@@ -382,16 +385,10 @@ public class Game {
 		p.setNumberResourcesType("WOOL", p.getNumberResourcesType("WOOL") - 1);
 
 		p.setVictoryPoints(p.getVictoryPoints() + 1);
-
-		// Überprüfe Siegbedingung nach Punkteerhöhung
-		if (p.getVictoryPoints() >= 10) {
-			GameRunner.setWinner(p);
-		}
-
+		
 		p.addSettlement();
 		return 0;
 	}
-
 
 	/**
 	 * Buys City for given Player

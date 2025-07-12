@@ -5,7 +5,7 @@ import gui.GameWindow;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 public class GameRunner {
 	
@@ -40,17 +40,6 @@ public class GameRunner {
 	public static void nextPlayer() {
 		currentPlayer = players.get((index + 1) % numberPlayers);
 		index = (index + 1) % numberPlayers;
-
-		if (game.over()) {
-			Player winner = game.winningPlayer();
-			setWinner(winner);
-			// Hier können Sie einen Dialog anzeigen
-			JOptionPane.showMessageDialog(null,
-					winner.getName() + " hat das Spiel gewonnen!",
-					"Spielende",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-
 	}
 	
 	public static void prevPlayer() {

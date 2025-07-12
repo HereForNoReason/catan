@@ -15,7 +15,12 @@ import java.util.ArrayList;
 //import java.util.concurrent.Executors;
 
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import lib.GraphPaperLayout;
 
@@ -53,37 +58,6 @@ public class SideBar extends JPanel {
 
 	public final static int INTERVAL = 50;
 	private Timer timer;
-
-	public void winPanel() {
-		// Entferne alle aktuellen Komponenten
-		removeAll();
-
-		Player winner = GameRunner.getWinner();
-		if (winner != null) {
-			// Erstelle ein Label für den Gewinner
-			JLabel winnerLabel = new JLabel(String.format(
-					"%s hat gewonnen!",
-					winner.getName()
-			));
-			winnerLabel.setFont(new Font("Arial", Font.BOLD, 24));
-			winnerLabel.setForeground(winner.getColor());
-
-			// Füge das Label zum Panel hinzu
-			add(winnerLabel);
-
-			// Optional: Füge einen "Neues Spiel" Button hinzu
-			JButton newGameButton = new JButton("Neues Spiel");
-			newGameButton.addActionListener(e -> {
-				// Hier Code für Neustart des Spiels
-			});
-			add(newGameButton);
-		}
-
-		// Aktualisiere das Panel
-		revalidate();
-		repaint();
-	}
-
 
 	public SideBar(final GameWindow display) {
 		setBackground(new Color(255, 255, 255, 255));
@@ -374,33 +348,16 @@ public class SideBar extends JPanel {
 					placePanel("Place a settlement...");
 					timer = new Timer(INTERVAL,
 							new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									Player current = GameRunner.getCurrentPlayer();
-									Game game = display.getBoard().getGame();
+						public void actionPerformed(ActionEvent evt) {
+							if(display.getBoard().getState() == 2){
 
-									int result = game.buySettlement(current);
-									if (result == 0) {
-										display.getBoard().setMode("SETTLE");
-										placePanel("Settlement");
-										// Überprüfe nach erfolgreichem Kauf auf Gewinner
-										if (game.over()) {
-											Player winner = game.winningPlayer();
-											winPanel(); // Zeige das Gewinner-Panel
-											JOptionPane.showMessageDialog(null,
-													String.format("%s hat das Spiel mit %d Siegpunkten gewonnen!",
-															winner.getName(),
-															winner.getVictoryPoints()),
-													"Spielende!",
-													JOptionPane.INFORMATION_MESSAGE);
-										}
-									} else if (result == 1) {
-										errorPanel("Nicht genügend Ressourcen!");
-									} else if (result == 2) {
-										errorPanel("Siedlungslimit erreicht!");
-									}
-								}
-
-							});
+							}
+							else {
+								buyPanel();
+								timer.stop();
+							}
+						}
+					});
 					timer.start();
 				}
 				else if (bought == 1) {
@@ -1123,4 +1080,11 @@ public class SideBar extends JPanel {
 		setPanel(setupPanel);
 	}
 
+	public void winPanel() {
+		this.removeAll();
+
+		JLabel win = new JLabel(GameRunner.getWinner().getName() + " wins!");
+		win.setFont(new Font("Arial", 1, 24));
+		this.add(win, new Rectangle(2,4,10,5));
+	}
 }
