@@ -203,36 +203,37 @@ public class Board {
      *
      * @param loc    Location of settlement
      * @param player Player placing the settlement
-     * @return boolean true if successful
+     * @return Success of placement
      */
     public boolean placeStructureNoRoad(VertexLocation loc, Player player) {
+        if (!canPlaceStructureNoRoad(loc))
+            return false;
 
+        if (checkPort(loc) != -1)
+            player.addPort(checkPort(loc));
+        structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
+        return true;
+    }
+
+    /**
+     * Checks if an initial settlement can be placed here
+     *
+     * @param loc Location of settlement
+     * @return Whether the location is still valid
+     */
+    public boolean canPlaceStructureNoRoad(VertexLocation loc) {
         if (structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].getOwner() != null) { //Vertex is already occupied
             return false;
         }
 
         if (loc.getOrientation() == 0) {
-            if (structures[loc.getXCoord()][loc.getYCoord() + 1][1].getOwner() == null &&
+            return structures[loc.getXCoord()][loc.getYCoord() + 1][1].getOwner() == null &&
                     structures[loc.getXCoord() + 1][loc.getYCoord() + 1][1].getOwner() == null &&
-                    !(loc.getYCoord() + 2 <= 6 && !(structures[loc.getXCoord() + 1][loc.getYCoord() + 2][1].getOwner() == null))) {
-                if (checkPort(loc) != -1)
-                    player.addPort(checkPort(loc));
-                structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
-                return true;
-            } else {
-                return false;
-            }
+                    !(loc.getYCoord() + 2 <= 6 && !(structures[loc.getXCoord() + 1][loc.getYCoord() + 2][1].getOwner() == null));
         } else {
-            if (structures[loc.getXCoord()][loc.getYCoord() - 1][0].getOwner() == null &&
+            return structures[loc.getXCoord()][loc.getYCoord() - 1][0].getOwner() == null &&
                     structures[loc.getXCoord() - 1][loc.getYCoord() - 1][0].getOwner() == null &&
-                    !(loc.getYCoord() - 2 >= 0 && !(structures[loc.getXCoord() - 1][loc.getYCoord() - 2][0].getOwner() == null))) {
-                if (checkPort(loc) != -1)
-                    player.addPort(checkPort(loc));
-                structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
-                return true;
-            } else {
-                return false;
-            }
+                    !(loc.getYCoord() - 2 >= 0 && !(structures[loc.getXCoord() - 1][loc.getYCoord() - 2][0].getOwner() == null));
         }
     }
 
@@ -241,46 +242,43 @@ public class Board {
      *
      * @param loc    Location of settlement
      * @param player Player placing the settlement
-     * @return boolean true if successful
+     * @return Success of placement
      */
     public boolean placeStructure(VertexLocation loc, Player player) {
+        if (!canPlaceStructure(loc, player))
+            return false;
+
+        if (checkPort(loc) != -1)
+            player.addPort(checkPort(loc));
+        structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
+        return true;
+    }
+
+    /**
+     * Checks location for validity for given player
+     *
+     * @param loc    Location of settlement
+     * @param player Player placing the settlement
+     * @return Whether the player can place a settlement at the given location
+     */
+    public boolean canPlaceStructure(VertexLocation loc, Player player) {
 
         if (structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].getOwner() != null) { //Vertex is already occupied
             return false;
         }
 
+        if (!canPlaceStructureNoRoad(loc))
+            return false;
+
         if (loc.getOrientation() == 0) {
-            if ((player.equals(roads[loc.getXCoord()][loc.getYCoord()][0].getOwner()) ||
+            return (player.equals(roads[loc.getXCoord()][loc.getYCoord()][0].getOwner()) ||
                     player.equals(roads[loc.getXCoord()][loc.getYCoord()][1].getOwner()) ||
-                    player.equals(roads[loc.getXCoord()][loc.getYCoord() + 1][2].getOwner()))
-                    &&
-                    (structures[loc.getXCoord()][loc.getYCoord() + 1][1].getOwner() == null &&
-                            structures[loc.getXCoord() + 1][loc.getYCoord() + 1][1].getOwner() == null &&
-                            !(loc.getYCoord() + 2 <= 6 && !(structures[loc.getXCoord() + 1][loc.getYCoord() + 2][1].getOwner() == null)))) {
-                if (checkPort(loc) != -1)
-                    player.addPort(checkPort(loc));
-                structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
-                return true;
-            } else {
-                return false;
-            }
+                    player.equals(roads[loc.getXCoord()][loc.getYCoord() + 1][2].getOwner()));
         } else {
-            if ((player.equals(roads[loc.getXCoord()][loc.getYCoord() - 1][0].getOwner()) ||
+            return (player.equals(roads[loc.getXCoord()][loc.getYCoord() - 1][0].getOwner()) ||
                     player.equals(roads[loc.getXCoord() - 1][loc.getYCoord() - 1][1].getOwner()) ||
-                    player.equals(roads[loc.getXCoord() - 1][loc.getYCoord() - 1][2].getOwner()))
-                    &&
-                    (structures[loc.getXCoord()][loc.getYCoord() - 1][0].getOwner() == null &&
-                            structures[loc.getXCoord() - 1][loc.getYCoord() - 1][0].getOwner() == null &&
-                            !(loc.getYCoord() - 2 >= 0 && !(structures[loc.getXCoord() - 1][loc.getYCoord() - 2][0].getOwner() == null)))) {
-                if (checkPort(loc) != -1)
-                    player.addPort(checkPort(loc));
-                structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
-                return true;
-            } else {
-                return false;
-            }
+                    player.equals(roads[loc.getXCoord() - 1][loc.getYCoord() - 1][2].getOwner()));
         }
-        //structures[loc.getXCoordination()][loc.getYCoordination()][loc.getOrientation()].setOwner(player);
     }
 
     /**
@@ -288,50 +286,50 @@ public class Board {
      *
      * @param loc    Location of the road
      * @param player Player placing the road
-     * @return boolean true if successful
+     * @return Success of placement
      */
     public boolean placeRoad(EdgeLocation loc, Player player) {
+        if (!canPlaceRoad(loc, player))
+            return false;
+
+        roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
+        return true;
+    }
+
+    /**
+     * Checks location for validity for given player
+     *
+     * @param loc    Location of the road
+     * @param player Player placing the road
+     * @return Whether the player can place a road at the given location
+     */
+    public boolean canPlaceRoad(EdgeLocation loc, Player player) {
 
         if (roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].getOwner() != null) { //Vertex is already occupied
             return false;
         }
 
         if (loc.getOrientation() == 0) {
-            if (player.equals(structures[loc.getXCoord()][loc.getYCoord() + 1][1].getOwner()) ||
+            return player.equals(structures[loc.getXCoord()][loc.getYCoord() + 1][1].getOwner()) ||
                     player.equals(structures[loc.getXCoord()][loc.getYCoord()][0].getOwner()) ||
                     player.equals(roads[loc.getXCoord() - 1][loc.getYCoord()][1].getOwner()) ||
                     player.equals(roads[loc.getXCoord() - 1][loc.getYCoord()][2].getOwner()) ||
                     player.equals(roads[loc.getXCoord()][loc.getYCoord() + 1][2].getOwner()) ||
-                    player.equals(roads[loc.getXCoord()][loc.getYCoord()][1].getOwner())) {
-                roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
-                return true;
-            } else {
-                return false;
-            }
+                    player.equals(roads[loc.getXCoord()][loc.getYCoord()][1].getOwner());
         } else if (loc.getOrientation() == 1) {
-            if (player.equals(structures[loc.getXCoord()][loc.getYCoord()][0].getOwner()) ||
+            return player.equals(structures[loc.getXCoord()][loc.getYCoord()][0].getOwner()) ||
                     player.equals(structures[loc.getXCoord() + 1][loc.getYCoord() + 1][1].getOwner()) ||
                     player.equals(roads[loc.getXCoord()][loc.getYCoord()][0].getOwner()) ||
                     player.equals(roads[loc.getXCoord()][loc.getYCoord() + 1][2].getOwner()) ||
                     player.equals(roads[loc.getXCoord()][loc.getYCoord()][2].getOwner()) ||
-                    player.equals(roads[loc.getXCoord() + 1][loc.getYCoord()][0].getOwner())) {
-                roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
-                return true;
-            } else {
-                return false;
-            }
+                    player.equals(roads[loc.getXCoord() + 1][loc.getYCoord()][0].getOwner());
         } else {
-            if (player.equals(structures[loc.getXCoord()][loc.getYCoord() - 1][0].getOwner()) ||
+            return player.equals(structures[loc.getXCoord()][loc.getYCoord() - 1][0].getOwner()) ||
                     player.equals(structures[loc.getXCoord() + 1][loc.getYCoord() + 1][1].getOwner()) ||
                     player.equals(roads[loc.getXCoord()][loc.getYCoord()][1].getOwner()) ||
                     player.equals(roads[loc.getXCoord() + 1][loc.getYCoord()][0].getOwner()) ||
                     player.equals(roads[loc.getXCoord()][loc.getYCoord() - 1][0].getOwner()) ||
-                    player.equals(roads[loc.getXCoord()][loc.getYCoord() - 1][1].getOwner())) {
-                roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
-                return true;
-            } else {
-                return false;
-            }
+                    player.equals(roads[loc.getXCoord()][loc.getYCoord() - 1][1].getOwner());
         }
     }
 
@@ -340,15 +338,26 @@ public class Board {
      *
      * @param loc    Location of the road
      * @param player Player placing the road
-     * @return boolean true if successful
+     * @return Success of placement
      */
     public boolean placeCity(VertexLocation loc, Player player) {
-        if (player.equals(structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].getOwner()) &&
-                structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].getType() == 0) {
-            structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setType(1);
-            return true;
-        } else
+        if (!canPlaceCity(loc, player))
             return false;
+
+        structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setType(1);
+        return true;
+    }
+
+    /**
+     * Checks location for validity for given player
+     *
+     * @param loc    Location of the road
+     * @param player Player placing the road
+     * @return Whether the player can place a city at the given location
+     */
+    public boolean canPlaceCity(VertexLocation loc, Player player) {
+        return player.equals(structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].getOwner()) &&
+                structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].getType() == 0;
     }
 
     /**
@@ -449,120 +458,123 @@ public class Board {
         return output;
     }
 
-	/**
-	 * Finds the length of the longest chain of roads of the given player
-	 * @param p player's roads to be analyzed
-	 * @return length of the longest chain of roads
-	 */
-	public int findLongestRoad(Player p) {
-		int max = 0;
+    /**
+     * Finds the length of the longest chain of roads of the given player
+     *
+     * @param p player's roads to be analyzed
+     * @return length of the longest chain of roads
+     */
+    public int findLongestRoad(Player p) {
+        int max = 0;
 
-		for (Road road : p.getRoads()) {
-			EdgeLocation loc = road.getLocation();
+        for (Road road : p.getRoads()) {
+            EdgeLocation loc = road.getLocation();
 
-			int x = loc.getXCoord();
-			int y = loc.getYCoord();
-			int o = loc.getOrientation();
+            int x = loc.getXCoord();
+            int y = loc.getYCoord();
+            int o = loc.getOrientation();
 
-			if (o == 0) {
-				max = Math.max(max, Math.max(
-						searchMaxPathLength(p, road, structures[x][y+1][1]),
-						searchMaxPathLength(p, road, structures[x][y][0])
-				));
-			} else if (o == 1) {
-				max = Math.max(max, Math.max(
-						searchMaxPathLength(p, road, structures[x+1][y+1][1]),
-						searchMaxPathLength(p, road, structures[x][y][0])
-				));
-			} else {
-				max = Math.max(max, Math.max(
-						searchMaxPathLength(p, road, structures[x+1][y+1][1]),
-						searchMaxPathLength(p, road, structures[x][y-1][0])
-				));
-			}
-		}
+            if (o == 0) {
+                max = Math.max(max, Math.max(
+                        searchMaxPathLength(p, road, structures[x][y + 1][1]),
+                        searchMaxPathLength(p, road, structures[x][y][0])
+                ));
+            } else if (o == 1) {
+                max = Math.max(max, Math.max(
+                        searchMaxPathLength(p, road, structures[x + 1][y + 1][1]),
+                        searchMaxPathLength(p, road, structures[x][y][0])
+                ));
+            } else {
+                max = Math.max(max, Math.max(
+                        searchMaxPathLength(p, road, structures[x + 1][y + 1][1]),
+                        searchMaxPathLength(p, road, structures[x][y - 1][0])
+                ));
+            }
+        }
 
-		return max;
-	}
+        return max;
+    }
 
     /**
      * Search for the length of the longest continuous path belonging to a single player.
      * The path starts with an edge in a certain direction and will ignore edges already on the path it's considering.
-     * @param p Player the path must belong to
-     * @param start The edge to start at
+     *
+     * @param p         Player the path must belong to
+     * @param start     The edge to start at
      * @param direction The vertex at which to look for the next edges to consider
      * @return The length of the longest path from this point onwards
      */
-	private int searchMaxPathLength(Player p, Road start, Structure direction) {
-		if (start.isVisited())
-			return 0;
+    private int searchMaxPathLength(Player p, Road start, Structure direction) {
+        if (start.isVisited())
+            return 0;
 
-		if (direction.getOwner() != null && !p.equals(direction.getOwner()))
-			return 1;
+        if (direction.getOwner() != null && !p.equals(direction.getOwner()))
+            return 1;
 
-		start.visit();
+        start.visit();
 
-		EdgeLocation loc = start.getLocation();
+        EdgeLocation loc = start.getLocation();
 
         int x = loc.getXCoord();
-		int y = loc.getYCoord();
-		int o = loc.getOrientation();
-		int o2 = direction.getLocation().getOrientation();
+        int y = loc.getYCoord();
+        int o = loc.getOrientation();
+        int o2 = direction.getLocation().getOrientation();
 
-		int max = 0;
+        int max = 0;
 
-		if (o == 0) {
-			if (o2 == 0) {
-				if (x < 6 && y < 5 && p.equals(roads[x][y+1][2].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x][y+1][2], structures[x+1][y+2][1]));
+        if (o == 0) {
+            if (o2 == 0) {
+                if (x < 6 && y < 5 && p.equals(roads[x][y + 1][2].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x][y + 1][2], structures[x + 1][y + 2][1]));
 
-				if (x < 6 && y < 6 && p.equals(roads[x][y][1].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x][y][1], structures[x+1][y+1][1]));
-			} else {
-				if (x > 0 && p.equals(roads[x-1][y][1].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x-1][y][1], structures[x-1][y][0]));
+                if (x < 6 && y < 6 && p.equals(roads[x][y][1].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x][y][1], structures[x + 1][y + 1][1]));
+            } else {
+                if (x > 0 && p.equals(roads[x - 1][y][1].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x - 1][y][1], structures[x - 1][y][0]));
 
-				if (x > 0 && y > 0 && p.equals(roads[x-1][y][2].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x-1][y][2], structures[x-1][y-1][0]));
-			}
-		} else if (o == 1) {
-			if (o2 == 0) {
-				if (x < 6 && y < 5 && p.equals(roads[x][y+1][2].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x][y+1][2], structures[x+1][y+2][1]));
+                if (x > 0 && y > 0 && p.equals(roads[x - 1][y][2].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x - 1][y][2], structures[x - 1][y - 1][0]));
+            }
+        } else if (o == 1) {
+            if (o2 == 0) {
+                if (x < 6 && y < 5 && p.equals(roads[x][y + 1][2].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x][y + 1][2], structures[x + 1][y + 2][1]));
 
-				if (y < 6 && p.equals(roads[x][y][0].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x][y][0], structures[x][y+1][1]));
-			} else {
-				if (x < 6 && p.equals(roads[x+1][y][0].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x+1][y][0], structures[x+1][y][0]));
+                if (y < 6 && p.equals(roads[x][y][0].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x][y][0], structures[x][y + 1][1]));
+            } else {
+                if (x < 6 && p.equals(roads[x + 1][y][0].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x + 1][y][0], structures[x + 1][y][0]));
 
-				if (y > 0 && p.equals(roads[x][y][2].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x][y][2], structures[x][y-1][0]));
-			}
-		} else {
-			if (o2 == 0) {
-				if (x < 6 && y > 0 && p.equals(roads[x][y-1][1].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x][y-1][1], structures[x+1][y][1]));
+                if (y > 0 && p.equals(roads[x][y][2].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x][y][2], structures[x][y - 1][0]));
+            }
+        } else {
+            if (o2 == 0) {
+                if (x < 6 && y > 0 && p.equals(roads[x][y - 1][1].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x][y - 1][1], structures[x + 1][y][1]));
 
-				if (y > 0 && p.equals(roads[x][y-1][0].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x][y-1][0], structures[x][y][1]));
-			} else {
-				if (x < 6 && p.equals(roads[x+1][y][0].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x+1][y][0], structures[x+1][y][0]));
+                if (y > 0 && p.equals(roads[x][y - 1][0].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x][y - 1][0], structures[x][y][1]));
+            } else {
+                if (x < 6 && p.equals(roads[x + 1][y][0].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x + 1][y][0], structures[x + 1][y][0]));
 
-				if (p.equals(roads[x][y][1].getOwner()))
-					max = Math.max(max, searchMaxPathLength(p, roads[x][y][1], structures[x][y][0]));
-			}
-		}
+                if (p.equals(roads[x][y][1].getOwner()))
+                    max = Math.max(max, searchMaxPathLength(p, roads[x][y][1], structures[x][y][0]));
+            }
+        }
 
-		start.resetVisited();
+        start.resetVisited();
 
-		return max + 1;
-	}
+        return max + 1;
+    }
 
-	/**
-	 * Checks if given VertexLocation is a port, and returns the portTag is it is.
-	 ** @param loc the location to check at
+    /**
+     * Checks if given VertexLocation is a port, and returns the portTag is it is.
+     * * @param loc the location to check at
+     *
      * @return int portTag if port, -1 if not
      * 0 = general
      * 1 = brick

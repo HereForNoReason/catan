@@ -8,20 +8,20 @@ import java.util.ArrayList;
 
 /**
  * The starting class which will create and run the game
- *
  */
 
 public class GameRunner {
 
+    private static final ArrayList<Player> players = new ArrayList<>();
     private static Player currentPlayer;
     private static int numberPlayers;
     private static int index = 0;
-    private static final ArrayList<Player> players = new ArrayList<>();
     private static Player winner;
 
     public static void main(String[] args) {
         start();
     }
+
     /**
      * Player enters their name here
      *
@@ -38,6 +38,7 @@ public class GameRunner {
         }
         return playerName;
     }
+
     /**
      * Starting the game after initial Setup
      */
@@ -49,7 +50,7 @@ public class GameRunner {
                     "How many Players?",
                     JOptionPane.QUESTION_MESSAGE,
                     null,
-                    new Integer[] { 3, 4 },
+                    new Integer[]{3, 4},
                     3
             );
 
@@ -85,6 +86,7 @@ public class GameRunner {
         currentPlayer = players.get((index + 1) % numberPlayers);
         index = (index + 1) % numberPlayers;
     }
+
     /**
      * Selects the previous Player
      */
@@ -92,6 +94,7 @@ public class GameRunner {
         currentPlayer = players.get((index - 1) % numberPlayers);
         index = (index - 1) % numberPlayers;
     }
+
     /**
      * Chooses who starts the game
      */

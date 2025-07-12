@@ -15,11 +15,11 @@ public class Player {
     private final Color color;
     private final HashMap<String, Integer> resources;
     private final ArrayList<Road> roads;
+    private final boolean[] ports = {false, false, false, false, false, false};
     private int numbSettlements = 2;
     private int victoryPoints = 2;
     private int numbRoads = 0;
     private int numbCities = 0;
-    private final boolean[] ports = {false, false, false, false, false, false};
     // 0 = general
     // 1 = brick
     // 2 = wool
@@ -255,7 +255,7 @@ public class Player {
     }
 
     /**
-     *  Increase City count and therefore decrease Settlement count
+     * Increase City count and therefore decrease Settlement count
      */
     public void upCity() {
         numbSettlements--;
@@ -288,7 +288,6 @@ public class Player {
      */
     public void removeResources(ArrayList<String> rez) {
         for (String s : rez) {
-            //System.out.println("Removed " + s);
             setNumberResourcesType(s, getNumberResourcesType(s) - 1);
         }
     }

@@ -7,8 +7,8 @@ import game.Player;
  */
 public class Road {
 
-    private Player owner = null;
     private final EdgeLocation location;
+    private Player owner = null;
     private boolean visited = false;
 
 

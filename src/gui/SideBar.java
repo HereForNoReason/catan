@@ -24,13 +24,14 @@ public class SideBar extends JPanel {
     private final ComponentList errorPanel = new ComponentList();
     private final ComponentList devPanel = new ComponentList();
     private final ComponentList resPanel = new ComponentList();
-    private String resSelection;
-    private boolean done = false;
     private final ComponentList stealPanel = new ComponentList();
     private final ComponentList placePanel = new ComponentList();
     private final ComponentList cancelPlacePanel = new ComponentList();
     private final ComponentList setupPanel = new ComponentList();
     private final ComponentList inputResourcesPanel = new ComponentList();
+    private final KComponent currentPlayerBox;
+    private String resSelection;
+    private boolean done = false;
     private ArrayList<String> inputResources = new ArrayList<>();
     private ArrayList<String> offerResources = new ArrayList<>();
     private ArrayList<String> sellResources = new ArrayList<>();
@@ -39,7 +40,6 @@ public class SideBar extends JPanel {
     private boolean IRPDone = true;
     private boolean secondRound = false;
     private int count = 0;
-    private final KComponent currentPlayerBox;
     // For tracking where we are in turn; 0 = main panel or roll, 1 = trade panel, 2 = buy panel, 3 = dev card panel
     private int flag = 0;
     private Timer timer;
@@ -127,7 +127,6 @@ public class SideBar extends JPanel {
                                     }
                                 });
                     } else {
-                        //System.out.println("3");
                         if (GameRunner.getPlayer(0).getTotalResources() > 7)
                             remove = GameRunner.getPlayer(0).getTotalResources() / 2;
                         inputResourcesPanel(remove, GameRunner.getPlayer(0), "Remove " + remove + " resources", false);
@@ -439,10 +438,8 @@ public class SideBar extends JPanel {
         JComboBox<Player> playerTradeBox = new JComboBox<>();
         playerTradeBox.setAction(new AbstractAction() {
             public void actionPerformed(ActionEvent a) {
-                //System.out.println("action!");
                 JComboBox<Player> cb = (JComboBox<Player>) a.getSource();
                 tradeChoice = (Player) cb.getSelectedItem();
-                //System.out.println(tradeChoice);
                 inputResourcesPanel(-1, GameRunner.getCurrentPlayer(), "Offer resources", false);
                 timer = new Timer(INTERVAL,
                         evt -> {
@@ -548,7 +545,6 @@ public class SideBar extends JPanel {
 
         JButton begin = new JButton(new AbstractAction() {
             public void actionPerformed(ActionEvent a) {
-                //System.out.println(count);
                 if (!secondRound) {
 
                     if (count == GameRunner.getNumbPlayers() - 1) {
@@ -812,10 +808,8 @@ public class SideBar extends JPanel {
         ((JComboBox<Player>) stealPanel.get(0).getComponent()).setAction(action);
 
         if (((JComboBox<Player>) stealPanel.get(0).getComponent()).getItemCount() <= 0) {
-            //System.out.println("IF");
             errorPanel("No one to steal from");
         } else {
-            //System.out.println("ELSE");
             setPanel(stealPanel);
         }
     }
@@ -908,7 +902,6 @@ public class SideBar extends JPanel {
                 for (int i = 0; i < 5; i++) {
                     sum += ((JComboBox<Integer>) inputResourcesPanel.get(i).getComponent()).getSelectedIndex();
                 }
-                //System.out.println(sum);
                 if (n != -1) {
                     if (sum != n) {
                         return;
@@ -933,10 +926,7 @@ public class SideBar extends JPanel {
                 }
 
                 inputResources = output2;
-                //System.out.println("Arrived");
                 IRPDone = true;
-
-
             }
         });
 

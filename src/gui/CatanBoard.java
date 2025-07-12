@@ -17,7 +17,6 @@ public class CatanBoard extends JPanel {
 
     private final double sqrt3div2 = 0.86602540378;
     private final int structSize = 12;
-    private int state = 0;
     //0 = none
     //1 = choosing tile
     //2 = choosing settlement
@@ -25,16 +24,16 @@ public class CatanBoard extends JPanel {
     //4 = choosing city
     //5 = choosing setup settlements
     private final Game game;
-    private int boardHeight;
-    private int hexagonSide;
     private final int heightMargin = 100;
-    private int widthMargin;
     private final Tile[][] tiles;
     private final Road[][][] roads;
     private final Structure[][][] structures;
+    private int state = 0;
+    private int boardHeight;
+    private int hexagonSide;
+    private int widthMargin;
 
     //private Graphics g;
-
     private int index;
     private boolean capitol = false;
 
@@ -51,11 +50,9 @@ public class CatanBoard extends JPanel {
         setBackground(new Color(0, 136, 255, 255)); //TODO add background
 
 
-
         this.addComponentListener(new ComponentListener() {
 
             public void componentResized(ComponentEvent e) {
-                //	System.out.println(e.getComponent().getSize());
                 boardHeight = getHeight();
                 hexagonSide = (boardHeight - 2 * heightMargin) / 8;
                 widthMargin = (getWidth() - (int) (10 * hexagonSide * sqrt3div2)) / 2;
@@ -177,24 +174,24 @@ public class CatanBoard extends JPanel {
             Location loc = pxToTile(p);
             if (loc != null) {
                 highlightTile(loc, g2);
-
             }
         } else if (state == 2 || state == 4 || state == 5) {
             VertexLocation loc = pxToStructure(p);
-            if (loc != null) {
-
+            Player current = GameRunner.getCurrentPlayer();
+            if (loc != null && (
+                    (state == 2 && game.getBoard().canPlaceStructure(loc, current))
+                            || (state == 4 && game.getBoard().canPlaceCity(loc, current))
+                            || (state == 5 && game.getBoard().canPlaceStructureNoRoad(loc))
+            )) {
                 drawStructure(structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()], true, g2);
             }
         } else if (state == 3) {
             EdgeLocation loc = pxToRoad(p);
 
-            if (loc != null) {
-
+            if (loc != null && game.getBoard().canPlaceRoad(loc, GameRunner.getCurrentPlayer())) {
                 drawRoad(roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()], true, g2);
             }
         }
-        //System.out.println("Painted");
-
         labelPorts(g2);
     }
 
@@ -370,7 +367,6 @@ public class CatanBoard extends JPanel {
     }
 
     public void highlightTile(Location loc, Graphics2D g2) {
-        //System.out.println("Highlighted");
         int x = loc.getXCoord();
         int y = loc.getYCoord();
         if (tiles[x][y].hasRobber()) {
@@ -395,7 +391,6 @@ public class CatanBoard extends JPanel {
         g2.setColor(Color.BLACK);
         if (tile.getNumber() == 6 || tile.getNumber() == 8)
             g2.setColor(Color.RED);
-        //System.out.println("" + tile.getNumber());
         g2.drawString("" + tile.getNumber(), (int) p.getX() - 5, (int) p.getY() + 5);
     }
 
@@ -428,10 +423,8 @@ public class CatanBoard extends JPanel {
             else
                 g2c.setColor(player.getColor());
         }
-        //System.out.println("Painted Road");
 
         AffineTransform transformer = new AffineTransform();
-        //Polygon poly = new Polygon();
 
         Point tileCenter = findCenter(r.getLocation().getXCoord(), r.getLocation().getYCoord());
         int y = (int) tileCenter.getY();
@@ -496,20 +489,17 @@ public class CatanBoard extends JPanel {
         Point tileCenter = findCenter(s.getLocation().getXCoord(), s.getLocation().getYCoord());
         int y = (int) tileCenter.getY();
         int x = (int) tileCenter.getX();
-        //System.out.println(y);
         if (s.getLocation().getOrientation() == 0) {
             y -= hexagonSide;
         } else if (s.getLocation().getOrientation() == 1) {
             y += hexagonSide;
         }
 
-        //System.out.println(y);
         if (s.getType() == 0) {
             shape = new Rectangle(x - structSize, y - structSize, 2 * structSize, 2 * structSize);
         } else {
             shape = new Ellipse2D.Double(x - structSize, y - structSize, 2 * structSize, 2 * structSize);
         }
-
 
 
         g2.fill(shape);
@@ -534,17 +524,10 @@ public class CatanBoard extends JPanel {
 
         int xCoord = 0,
                 yCoord = 0;
-//
-//		// Out of bounds
-//		if (x < widthMargin || x > widthMargin + 2 * 5 * sqrt3div2 || y < heightMargin || y > heightMargin + 8 * hexagonSide) {
-//			System.out.println("this null");
-//			return null;
-//		}
 
         // first horizontal band
         if (heightMargin + hexagonSide / 2 < y && y < heightMargin + 3 * hexagonSide / 2) {
             if (x < widthMargin + hexagonSide * 2 * sqrt3div2 || x > widthMargin + 4 * hexagonSide * 2 * sqrt3div2) {
-                //System.out.println("no this null");
                 return null;
             }
             yCoord = 5;
@@ -579,7 +562,6 @@ public class CatanBoard extends JPanel {
             else if (x > widthMargin + 3 * (2 * hexagonSide * sqrt3div2) && x < widthMargin + 4 * (2 * hexagonSide * sqrt3div2))
                 xCoord = 3;
             else {
-                //System.out.println("You guys got it all wrong, it's this null");
                 return null;
             }
         }
@@ -615,7 +597,6 @@ public class CatanBoard extends JPanel {
         }
 
         if (xCoord == 0) {
-            //System.out.println("I AM THE TRUE NULL");
             return null;
         }
 
@@ -646,12 +627,10 @@ public class CatanBoard extends JPanel {
         }
         // second column
         else if (widthMargin + sqrt3div2 * hexagonSide - structSize < x && x < widthMargin + sqrt3div2 * hexagonSide + structSize) {
-            //System.out.println("Column 2");
             if (heightMargin + 2 * hexagonSide - structSize < y && y < heightMargin + 2 * hexagonSide + structSize) {
                 xCoord = 2;
                 yCoord = 5;
                 orient = 1;
-                System.out.println("2, 5, 1");
             } else if (heightMargin + 3 * hexagonSide - structSize < y && y < heightMargin + 3 * hexagonSide + structSize) {
                 xCoord = 1;
                 yCoord = 3;
@@ -920,7 +899,6 @@ public class CatanBoard extends JPanel {
             x -= widthMargin;
             x -= (int) (hexagonSide * sqrt3div2);
             int tag = x / (2 * (int) (hexagonSide * sqrt3div2));
-            //System.out.println(tag);
             if (tag >= 0 && tag <= 3) {
                 if (x >= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) - roadSize &&
                         x <= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) + roadSize) {
@@ -1055,8 +1033,6 @@ public class CatanBoard extends JPanel {
 
     class AMouseListener extends MouseAdapter {
         public void mouseClicked(MouseEvent e) {
-            //System.out.println("Mouse Clicked");
-
             Point p = new Point(e.getX(), e.getY());
             if (state == 1) {
                 Location loc = pxToTile(p);
@@ -1115,11 +1091,9 @@ public class CatanBoard extends JPanel {
                                 }
                             }
                         }
-                        //System.out.println(index);
                     }
                     if (index == 0) {
                         state = 0;
-                        //System.out.println("state to 0");
                     }
                 }
             }

@@ -15,7 +15,6 @@ public class Tile {
     private boolean hasRobber = false;
 
 
-
     /**
      * Constructor, with given params for its fields
      *

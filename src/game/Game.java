@@ -16,7 +16,7 @@ public class Game {
     private final Board board;
     private final ArrayList<Player> players;
     private Player longestRoadOwner;
-	private int longestRoadLength = 4;
+    private int longestRoadLength = 4;
 
     /**
      * Constructor for game, creates the Board.
@@ -128,7 +128,6 @@ public class Game {
      * @param b     the second Player in the trading
      * @param fromA the resources being traded from Player a to Player b
      * @param fromB the resources being traded from Player b to Player a
-     *
      */
     public void playerTrade(Player a, Player b, ArrayList<String> fromA, ArrayList<String> fromB) {
 
@@ -153,7 +152,7 @@ public class Game {
      * @param a              the Player trading
      * @param fromA          what they are giving up
      * @param resourceBuying what they are asking for
-	 */
+     */
     public void npcTrade(Player a, String resourceBuying, ArrayList<String> fromA) {
         if (!a.hasResources(fromA))
             return;
@@ -207,7 +206,7 @@ public class Game {
             a.setNumberResourcesType(res, a.getNumberResourcesType(res) + 1);
         }
 
-	}
+    }
 
     /**
      * Checks if Player is able to buy a Road
@@ -263,6 +262,7 @@ public class Game {
 
         return 0;
     }
+
     /**
      * Buys Settlement for given Player
      *
@@ -337,18 +337,18 @@ public class Game {
             return false;
         }
 
-		int len = board.findLongestRoad(p);
+        int len = board.findLongestRoad(p);
 
-		if (len > longestRoadLength) {
-			if (longestRoadOwner != null) {
-				longestRoadOwner.setVictoryPoints(longestRoadOwner.getVictoryPoints() - 2);
-			}
+        if (len > longestRoadLength) {
+            if (longestRoadOwner != null) {
+                longestRoadOwner.setVictoryPoints(longestRoadOwner.getVictoryPoints() - 2);
+            }
 
-			longestRoadOwner = p;
-			longestRoadLength = len;
+            longestRoadOwner = p;
+            longestRoadLength = len;
 
-			p.setVictoryPoints(p.getVictoryPoints() + 2);
-		}
+            p.setVictoryPoints(p.getVictoryPoints() + 2);
+        }
 
         return true;
     }
@@ -364,31 +364,31 @@ public class Game {
         if (!board.placeStructure(loc, p))
             return false;
 
-		if (longestRoadOwner == null || board.findLongestRoad(longestRoadOwner) == longestRoadLength)
-			// Can't split the longest road if there is non
-			// And the title cannot be transferred if it doesn't get split
-			return true;
+        if (longestRoadOwner == null || board.findLongestRoad(longestRoadOwner) == longestRoadLength)
+            // Can't split the longest road if there is non
+            // And the title cannot be transferred if it doesn't get split
+            return true;
 
-		longestRoadOwner.setVictoryPoints(longestRoadOwner.getVictoryPoints() - 2);
+        longestRoadOwner.setVictoryPoints(longestRoadOwner.getVictoryPoints() - 2);
 
-		longestRoadOwner = null;
-		longestRoadLength = 4;
+        longestRoadOwner = null;
+        longestRoadLength = 4;
 
-		for (Player player : players) {
-			int len = board.findLongestRoad(player);
+        for (Player player : players) {
+            int len = board.findLongestRoad(player);
 
-			if (len > longestRoadLength) {
-				longestRoadLength = len;
-				longestRoadOwner = player;
-			} else if (len == longestRoadLength) {
-				// Multiple people with same length of longest road
-				longestRoadOwner = null;
-			}
-		}
+            if (len > longestRoadLength) {
+                longestRoadLength = len;
+                longestRoadOwner = player;
+            } else if (len == longestRoadLength) {
+                // Multiple people with same length of longest road
+                longestRoadOwner = null;
+            }
+        }
 
-		if (longestRoadOwner != null) {
-			longestRoadOwner.setVictoryPoints(longestRoadOwner.getVictoryPoints() + 2);
-		}
+        if (longestRoadOwner != null) {
+            longestRoadOwner.setVictoryPoints(longestRoadOwner.getVictoryPoints() + 2);
+        }
 
         return true;
     }

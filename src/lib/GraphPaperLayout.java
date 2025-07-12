@@ -47,25 +47,25 @@ import java.util.Hashtable;
  * import java.awt.*;
  * import java.applet.Applet;
  * public class ButtonGrid extends Applet {
- *     public void init() {
- *         setLayout(new GraphPaperLayout(new Dimension(5,5)));
- *         // Add a 1x1 Rect at (0,0)
- *         add(new Button("1"), new Rectangle(0,0,1,1));
- *         // Add a 2x1 Rect at (2,0)
- *         add(new Button("2"), new Rectangle(2,0,2,1));
- *         // Add a 1x2 Rect at (1,1)
- *         add(new Button("3"), new Rectangle(1,1,1,2));
- *         // Add a 2x2 Rect at (3,2)
- *         add(new Button("4"), new Rectangle(3,2,2,2));
- *         // Add a 1x1 Rect at (0,4)
- *         add(new Button("5"), new Rectangle(0,4,1,1));
- *         // Add a 1x2 Rect at (2,3)
- *         add(new Button("6"), new Rectangle(2,3,1,2));
- *     }
+ * public void init() {
+ * setLayout(new GraphPaperLayout(new Dimension(5,5)));
+ * // Add a 1x1 Rect at (0,0)
+ * add(new Button("1"), new Rectangle(0,0,1,1));
+ * // Add a 2x1 Rect at (2,0)
+ * add(new Button("2"), new Rectangle(2,0,2,1));
+ * // Add a 1x2 Rect at (1,1)
+ * add(new Button("3"), new Rectangle(1,1,1,2));
+ * // Add a 2x2 Rect at (3,2)
+ * add(new Button("4"), new Rectangle(3,2,2,2));
+ * // Add a 1x1 Rect at (0,4)
+ * add(new Button("5"), new Rectangle(0,4,1,1));
+ * // Add a 1x2 Rect at (2,3)
+ * add(new Button("6"), new Rectangle(2,3,1,2));
+ * }
  * }
  * </code>
  *
- * @author      Michael Martak
+ * @author Michael Martak
  */
 
 public class GraphPaperLayout implements LayoutManager2 {
@@ -84,14 +84,15 @@ public class GraphPaperLayout implements LayoutManager2 {
 
     /**
      * Creates a graph paper layout with the given grid size and padding.
+     *
      * @param gridSize size of the graph paper in logical units (n x m)
-     * @param hgap horizontal padding
-     * @param vgap vertical padding
+     * @param hgap     horizontal padding
+     * @param vgap     vertical padding
      */
     public GraphPaperLayout(Dimension gridSize, int hgap, int vgap) {
         if ((gridSize.width <= 0) || (gridSize.height <= 0)) {
             throw new IllegalArgumentException(
-                "dimensions must be greater than zero");
+                    "dimensions must be greater than zero");
         }
         this.gridSize = new Dimension(gridSize);
         this.hgap = hgap;
@@ -113,6 +114,7 @@ public class GraphPaperLayout implements LayoutManager2 {
 
     /**
      * Removes the specified component from the layout.
+     *
      * @param comp the component to be removed
      */
     public void removeLayoutComponent(Component comp) {
@@ -122,8 +124,8 @@ public class GraphPaperLayout implements LayoutManager2 {
     /**
      * Calculates the preferred size dimensions for the specified
      * panel given the components in the specified parent container.
-     * @param parent the component to be laid out
      *
+     * @param parent the component to be laid out
      * @see #minimumLayoutSize
      */
     public Dimension preferredLayoutSize(Container parent) {
@@ -133,6 +135,7 @@ public class GraphPaperLayout implements LayoutManager2 {
     /**
      * Calculates the minimum size dimensions for the specified
      * panel given the components in the specified parent container.
+     *
      * @param parent the component to be laid out
      * @see #preferredLayoutSize
      */
@@ -153,19 +156,19 @@ public class GraphPaperLayout implements LayoutManager2 {
      * rows, plus the vertical padding times the number of rows
      * plus one, plus the top and bottom insets of the target container.
      *
-     * @param parent the container in which to do the layout.
+     * @param parent      the container in which to do the layout.
      * @param isPreferred true for calculating preferred size, false for
      *                    calculating minimum size.
      * @return the dimensions to lay out the subcomponents of the specified
-     *         container.
+     * container.
      */
     protected Dimension getLayoutSize(Container parent, boolean isPreferred) {
         Dimension largestSize = getLargestCellSize(parent, isPreferred);
         Insets insets = parent.getInsets();
-        largestSize.width = ( largestSize.width * gridSize.width ) +
-            ( hgap * ( gridSize.width + 1 ) ) + insets.left + insets.right;
-        largestSize.height = ( largestSize.height * gridSize.height ) +
-            ( vgap * ( gridSize.height + 1 ) ) + insets.top + insets.bottom;
+        largestSize.width = (largestSize.width * gridSize.width) +
+                (hgap * (gridSize.width + 1)) + insets.left + insets.right;
+        largestSize.height = (largestSize.height * gridSize.height) +
+                (vgap * (gridSize.height + 1)) + insets.top + insets.bottom;
         return largestSize;
     }
 
@@ -177,7 +180,7 @@ public class GraphPaperLayout implements LayoutManager2 {
      * by the number of columns it is specified to occupy and dividing the
      * component's height by the number of rows it is specified to occupy.
      *
-     * @param parent the container in which to do the layout.
+     * @param parent      the container in which to do the layout.
      * @param isPreferred true for calculating preferred size, false for
      *                    calculating minimum size.
      * @return the largest cell size required.
@@ -185,13 +188,13 @@ public class GraphPaperLayout implements LayoutManager2 {
     protected Dimension getLargestCellSize(Container parent,
                                            boolean isPreferred) {
         int ncomponents = parent.getComponentCount();
-        Dimension maxCellSize = new Dimension(0,0);
-        for ( int i = 0; i < ncomponents; i++ ) {
+        Dimension maxCellSize = new Dimension(0, 0);
+        for (int i = 0; i < ncomponents; i++) {
             Component c = parent.getComponent(i);
             Rectangle rect = compTable.get(c);
-            if ( c != null && rect != null ) {
+            if (c != null && rect != null) {
                 Dimension componentSize;
-                if ( isPreferred ) {
+                if (isPreferred) {
                     componentSize = c.getPreferredSize();
                 } else {
                     componentSize = c.getMinimumSize();
@@ -199,9 +202,9 @@ public class GraphPaperLayout implements LayoutManager2 {
                 // Note: rect dimensions are already asserted to be > 0 when the
                 // component is added with constraints
                 maxCellSize.width = Math.max(maxCellSize.width,
-                    componentSize.width / rect.width);
+                        componentSize.width / rect.width);
                 maxCellSize.height = Math.max(maxCellSize.height,
-                    componentSize.height / rect.height);
+                        componentSize.height / rect.height);
             }
         }
         return maxCellSize;
@@ -209,6 +212,7 @@ public class GraphPaperLayout implements LayoutManager2 {
 
     /**
      * Lays out the container in the specified container.
+     *
      * @param parent the component which needs to be laid out
      */
     public void layoutContainer(Container parent) {
@@ -230,19 +234,19 @@ public class GraphPaperLayout implements LayoutManager2 {
             int totalCellH = totalH / gridSize.height;
 
             // Cell dimensions, without padding
-            int cellW = (totalW - ( (gridSize.width + 1) * hgap) )
+            int cellW = (totalW - ((gridSize.width + 1) * hgap))
                     / gridSize.width;
-            int cellH = (totalH - ( (gridSize.height + 1) * vgap) )
+            int cellH = (totalH - ((gridSize.height + 1) * vgap))
                     / gridSize.height;
 
-            for ( int i = 0; i < ncomponents; i++ ) {
+            for (int i = 0; i < ncomponents; i++) {
                 Component c = parent.getComponent(i);
                 Rectangle rect = compTable.get(c);
-                if ( rect != null ) {
-                    int x = insets.left + ( totalCellW * rect.x ) + hgap;
-                    int y = insets.top + ( totalCellH * rect.y ) + vgap;
-                    int w = ( cellW * rect.width ) - hgap;
-                    int h = ( cellH * rect.height ) - vgap;
+                if (rect != null) {
+                    int x = insets.left + (totalCellW * rect.x) + hgap;
+                    int y = insets.top + (totalCellH * rect.y) + vgap;
+                    int w = (cellW * rect.width) - hgap;
+                    int h = (cellH * rect.height) - vgap;
                     c.setBounds(x, y, w, h);
                 }
             }
@@ -254,29 +258,31 @@ public class GraphPaperLayout implements LayoutManager2 {
     /**
      * Adds the specified component to the layout, using the specified
      * constraint object.
-     * @param comp the component to be added
-     * @param constraints  where/how the component is added to the layout.
+     *
+     * @param comp        the component to be added
+     * @param constraints where/how the component is added to the layout.
      */
     public void addLayoutComponent(Component comp, Object constraints) {
         if (constraints instanceof Rectangle) {
-            Rectangle rect = (Rectangle)constraints;
-            if ( rect.width <= 0 || rect.height <= 0 ) {
+            Rectangle rect = (Rectangle) constraints;
+            if (rect.width <= 0 || rect.height <= 0) {
                 throw new IllegalArgumentException(
-                    "cannot add to layout: rectangle must have positive width and height");
+                        "cannot add to layout: rectangle must have positive width and height");
             }
-            if ( rect.x < 0 || rect.y < 0 ) {
+            if (rect.x < 0 || rect.y < 0) {
                 throw new IllegalArgumentException(
-                    "cannot add to layout: rectangle x and y must be >= 0");
+                        "cannot add to layout: rectangle x and y must be >= 0");
             }
             setConstraints(comp, rect);
         } else if (constraints != null) {
             throw new IllegalArgumentException(
-                "cannot add to layout: constraint must be a Rectangle");
+                    "cannot add to layout: constraint must be a Rectangle");
         }
     }
 
     /**
      * Returns the maximum size of this component.
+     *
      * @see java.awt.Component#getMinimumSize()
      * @see java.awt.Component#getPreferredSize()
      * @see LayoutManager
