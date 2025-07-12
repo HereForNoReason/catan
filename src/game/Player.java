@@ -38,8 +38,8 @@ public class Player {
 
         name = n;
         color = c;
-        roads = new ArrayList<Road>();
-        resources = new HashMap<String, Integer>(5);
+        roads = new ArrayList<>();
+        resources = new HashMap<>(5);
         resources.put("BRICK", 0);
         resources.put("WOOL", 0);
         resources.put("ORE", 0);
@@ -150,33 +150,6 @@ public class Player {
         return roads;
     }
 
-    /**
-     * Method to get an ArrayList of all the resources this Player has one or more of
-     *
-     * @return an ArrayList of resources that this Player as one or more of
-     */
-    public ArrayList<String> getOwnedResources() {
-
-        ArrayList<String> res = new ArrayList<String>();
-        if (resources.get("BRICK").intValue() > 0) {
-            res.add("BRICK");
-        }
-        if (resources.get("GRAIN").intValue() > 0) {
-            res.add("GRAIN");
-        }
-        if (resources.get("WOOL").intValue() > 0) {
-            res.add("WOOL");
-        }
-        if (resources.get("LUMBER").intValue() > 0) {
-            res.add("LUMBER");
-        }
-        if (resources.get("ORE").intValue() > 0) {
-            res.add("ORE");
-        }
-
-        return res;
-    }
-
 
     /**
      * Checks if this Player has the specified resources
@@ -191,7 +164,7 @@ public class Player {
                 brick = 0,
                 grain = 0;
 
-        for (String s : res) {
+        for (String ignored : res) {
             if (res.equals("WOOL"))
                 wool++;
             else if (res.equals("ORE"))

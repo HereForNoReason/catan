@@ -77,10 +77,9 @@ public class Game {
     /**
      * Rolls the die and allocates resources to players
      *
-     * @param p the Player rolling
      * @return int the roll
      */
-    public int roll(Player p) {
+    public int roll() {
 
         // RTD
         int roll = (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1);
@@ -120,7 +119,7 @@ public class Game {
 
         Collections.shuffle(res);
 
-        if (res.size() <= 0) {
+        if (res.isEmpty()) {
             return;
         }
         String result = res.get(0);
@@ -138,12 +137,12 @@ public class Game {
      * @param b     the second Player in the trading
      * @param fromA the resources being traded from Player a to Player b
      * @param fromB the resources being traded from Player b to Player a
-     * @return boolean whether the trade was possible
+     *
      */
-    public boolean playerTrade(Player a, Player b, ArrayList<String> fromA, ArrayList<String> fromB) {
+    public void playerTrade(Player a, Player b, ArrayList<String> fromA, ArrayList<String> fromB) {
 
         if (!a.hasResources(fromA) || !b.hasResources(fromB)) {
-            return false;
+            return;
         }
 
         for (String res : fromA) {
@@ -155,8 +154,6 @@ public class Game {
             b.setNumberResourcesType(res, b.getNumberResourcesType(res) - 1);
             a.setNumberResourcesType(res, a.getNumberResourcesType(res) + 1);
         }
-
-        return true;
     }
 
     /**
@@ -165,13 +162,11 @@ public class Game {
      * @param a              the Player trading
      * @param fromA          what they are giving up
      * @param resourceBuying what they are asking for
-     * @return int 0 = success; 1 = not enough resources; 2 = invalid ratio
-     */
-    public int npcTrade(Player a, String resourceBuying, ArrayList<String> fromA) {
+	 */
+    public void npcTrade(Player a, String resourceBuying, ArrayList<String> fromA) {
         if (!a.hasResources(fromA))
-            return 1;
+            return;
 
-        //TODO: check if this npc trade is valid (valid ratios, harbors, etc)
         boolean[] ports = a.getPorts();
         ArrayList<Integer> resources = new ArrayList<>();
         resources.add(Collections.frequency(fromA, "BRICK"));
@@ -179,29 +174,17 @@ public class Game {
         resources.add(Collections.frequency(fromA, "ORE"));
         resources.add(Collections.frequency(fromA, "GRAIN"));
         resources.add(Collections.frequency(fromA, "LUMBER"));
-
-        //int nBrick = Collections.frequency(fromA,"BRICK");
-        //int toBrick = Collections.frequency(toA,"BRICK");
-        //int nWool = Collections.frequency(fromA,"WOOL");
-        //int toWool = Collections.frequency(toA,"WOOL");
-        //int nOre = Collections.frequency(fromA,"ORE");
-        //int toOre = Collections.frequency(toA,"ORE");
-        //int nGrain = Collections.frequency(fromA,"GRAIN");
-        //int toGrain = Collections.frequency(toA,"GRAIN");
-        //int nLumber = Collections.frequency(fromA,"LUMBER");
-        //int toLumber = Collections.frequency(toA,"LUMBER");
         ArrayList<String> toA = new ArrayList<>();
 
         for (int i = 0; i < resources.size(); i++) {
-            if (resources.get(i) == 0) {
-            } else {
+            if (resources.get(i) != 0) {
                 if (ports[i + 1]) {
                     if (resources.get(i) % 2 == 0) {
                         for (int k = 0; k < resources.get(i) / 2; k++) {
                             toA.add(resourceBuying);
                         }
                     } else {
-                        return 2;
+                        return;
                     }
                 } else if (ports[0]) {
                     if (resources.get(i) % 3 == 0) {
@@ -209,7 +192,7 @@ public class Game {
                             toA.add(resourceBuying);
                         }
                     } else {
-                        return 2;
+                        return;
                     }
                 } else {
                     if (resources.get(i) % 4 == 0) {
@@ -217,7 +200,7 @@ public class Game {
                             toA.add(resourceBuying);
                         }
                     } else {
-                        return 2;
+                        return;
                     }
                 }
             }
@@ -228,14 +211,12 @@ public class Game {
             a.setNumberResourcesType(res, a.getNumberResourcesType(res) - 1);
         }
 
-        //ArrayList<String> toA = new ArrayList<String>();
-        //toA.add(resourceBuying);
+
         for (String res : toA) {
             a.setNumberResourcesType(res, a.getNumberResourcesType(res) + 1);
         }
 
-        return 0;
-    }
+	}
 
     /**
      * Buys Road for given Player

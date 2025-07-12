@@ -74,7 +74,7 @@ public class SideBar extends JPanel {
                     return;
                 }
 
-                int roll = g.roll(GameRunner.getCurrentPlayer());
+                int roll = g.roll();
 
                 if (roll != 7) {
                     mainPanel();
