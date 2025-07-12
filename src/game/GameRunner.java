@@ -1,7 +1,6 @@
 package game;
 
 import gui.GameWindow;
-import gui.PlayerSelectionApp;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,15 +17,10 @@ public class GameRunner {
     private static int numberPlayers;
     private static int index = 0;
     private static final ArrayList<Player> players = new ArrayList<>();
-    private static Game game;
     private static Player winner;
-    private static PlayerSelectionApp select;
 
     public static void main(String[] args) {
-
-        select = new PlayerSelectionApp();
-
-
+        start();
     }
     /**
      * Player enters their name here
@@ -49,7 +43,20 @@ public class GameRunner {
      */
     public static void start() {
         SwingUtilities.invokeLater(() -> {
-            numberPlayers = select.getSelectedPlayerCount();
+            Integer playerCount = (Integer) JOptionPane.showInputDialog(
+                    null,
+                    "How many Players?",
+                    "How many Players?",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new Integer[] { 3, 4 },
+                    3
+            );
+
+            if (playerCount == null)
+                System.exit(0);
+
+            numberPlayers = playerCount;
 
             players.add(new Player(getPlayerName(1), Color.BLUE));
             players.add(new Player(getPlayerName(2), Color.BLACK));
@@ -58,8 +65,7 @@ public class GameRunner {
             if (numberPlayers == 4) {
                 players.add(new Player(getPlayerName(4), Color.MAGENTA));
             }
-            GameWindow tmp = new GameWindow(players);
-            game = tmp.getBoard().getGame();
+            new GameWindow(players);
         });
     }
 
