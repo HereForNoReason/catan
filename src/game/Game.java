@@ -12,6 +12,7 @@ public class Game {
 
 	private Board board;
 	private ArrayList<Player> players;
+	private Player longestRoadOwner;
 
 	/**
 	 * Constructor for game, creates the Board.
@@ -112,7 +113,7 @@ public class Game {
 	/**
 	 * Allows the given Player to take a card from any Player with a Settlement on the Tile of the given Location
 	 * @param p the Player taking a card
-	 * @param loc the Location of the Tile
+	 * @param choice the Location of the Tile
 	 */
 	public void takeCard(Player p, Player choice) {
 
@@ -254,7 +255,7 @@ public class Game {
 	 * Operates trading between given Player and the stock
 	 * @param a the Player trading
 	 * @param fromA what they are giving up
-	 * @param toA what they are asking for
+	 * @param resourceBuying what they are asking for
 	 * @return int 0 = success; 1 = not enough resources; 2 = invalid ratio
 	 * 
 	 */
@@ -338,8 +339,7 @@ public class Game {
 	 * @param p the given Player
 	 * @return 0=success, 1=insufficient resources, 2=structure limit reached
 	 */
-	public int buyRoad(Player p) {
-
+	public int canBuyRoad(Player p) {
 		if (p.getNumberResourcesType("BRICK") < 1 || p.getNumberResourcesType("LUMBER") < 1) {
 			return 1;
 		}
@@ -349,13 +349,19 @@ public class Game {
 			return 2;
 		}
 
+		return 0;
+	}
+
+	public void buyRoad(Player p) {
+		if (canBuyRoad(p) != 0)
+			return;
+
 		p.setNumberResourcesType("BRICK", p.getNumberResourcesType("BRICK") - 1);
 		p.setNumberResourcesType("LUMBER", p.getNumberResourcesType("LUMBER") - 1);
 
 		//p.setVictoryPoints(p.getVictoryPoints() + 1);  TODO road victory points
 
 		p.addRoadCount();
-		return 0;
 	}
 
 	/**
@@ -363,8 +369,7 @@ public class Game {
 	 * @param p the given Player
 	 * @return 0=success, 1=insufficient resources, 2=structure limit reached
 	 */
-	public int buySettlement(Player p) {
-
+	public int canBuySettlement(Player p) {
 		// Check Player has sufficient resources
 		if (p.getNumberResourcesType("BRICK") < 1 || p.getNumberResourcesType("GRAIN") < 1 || p.getNumberResourcesType("WOOL") < 1 || p.getNumberResourcesType("LUMBER") < 1) {
 			return 1;
@@ -375,6 +380,13 @@ public class Game {
 			return 2;
 		}
 
+		return 0;
+	}
+
+	public void buySettlement(Player p) {
+		if (canBuySettlement(p) != 0)
+			return;
+
 		p.setNumberResourcesType("BRICK", p.getNumberResourcesType("BRICK") - 1);
 		p.setNumberResourcesType("LUMBER", p.getNumberResourcesType("LUMBER") - 1);
 		p.setNumberResourcesType("GRAIN", p.getNumberResourcesType("GRAIN") - 1);
@@ -383,7 +395,6 @@ public class Game {
 		p.setVictoryPoints(p.getVictoryPoints() + 1);
 		
 		p.addSettlement();
-		return 0;
 	}
 
 	/**
@@ -391,8 +402,7 @@ public class Game {
 	 * @param p the given Player
 	 * @return 0=success, 1=insufficient resources, 2=structure limit reached
 	 */
-	public int buyCity(Player p) {
-
+	public int canBuyCity(Player p) {
 		// Check Player has sufficient resources
 		if (p.getNumberResourcesType("GRAIN") < 2 || p.getNumberResourcesType("ORE") < 3) {
 			return 1;
@@ -403,6 +413,12 @@ public class Game {
 			return 2;
 		}
 
+		return 0;
+	}
+	public void buyCity(Player p) {
+		if (canBuyCity(p) != 0)
+			return;
+
 		p.setNumberResourcesType("GRAIN", p.getNumberResourcesType("GRAIN") - 2);
 		p.setNumberResourcesType("ORE", p.getNumberResourcesType("ORE") - 3);
 
@@ -412,7 +428,6 @@ public class Game {
 		}
 
 		p.upCity();
-		return 0;
 	}
 
 	/**
@@ -421,9 +436,27 @@ public class Game {
 	 * @param loc the EdgeLocation to place the ROad
 	 * @return whether the Road can go there
 	 */
-	public boolean placeRoad(Player p, EdgeLocation loc) {
-		return board.placeRoad(loc, p);
-	}
+	public boolean placeRoad(EdgeLocation loc, Player p) {
+        if (!board.placeRoad(loc, p)) {
+            return false;
+        }
+
+		if (true)
+			return true;
+
+		if (longestRoadOwner != null) {
+			if (board.findLongestRoad(longestRoadOwner) < board.findLongestRoad(p)) {
+				longestRoadOwner.setVictoryPoints(longestRoadOwner.getVictoryPoints() - 2);
+				p.setVictoryPoints(p.getVictoryPoints() + 2);
+				longestRoadOwner = p;
+			}
+		} else if (board.findLongestRoad(p) >= 5) {
+			p.setVictoryPoints(p.getVictoryPoints() + 2);
+			longestRoadOwner = p;
+		}
+
+		return true;
+    }
 
 	/**
 	 * Places a Settlement for the given Player at the given VertexLocation
@@ -431,8 +464,35 @@ public class Game {
 	 * @param loc the VertexLocation to place the Settlement
 	 * @return whether the Settlement can go there
 	 */
-	public boolean placeSettlement(Player p, VertexLocation loc) {
-		return board.placeStructure(loc, p);
+	public boolean placeStructure(VertexLocation loc, Player p) {
+		if (!board.placeStructure(loc, p))
+			return false;
+
+		if (true) // TODO: fix this
+			return true;
+
+		if (longestRoadOwner != null)
+			longestRoadOwner.setVictoryPoints(longestRoadOwner.getVictoryPoints() - 2);
+
+		longestRoadOwner = null;
+
+		int max = 0;
+		for (Player player : players) {
+			int len = board.findLongestRoad(player);
+
+			if (len > max) {
+				max = len;
+				longestRoadOwner = player;
+			} else if (len == max) {
+				longestRoadOwner = null;
+			}
+		}
+
+		if (max >= 5 && longestRoadOwner != null) {
+			longestRoadOwner.setVictoryPoints(longestRoadOwner.getVictoryPoints() + 2);
+		}
+
+		return true;
 	}
 
 	/**
@@ -441,20 +501,8 @@ public class Game {
 	 * @param loc the VertexLocation to place the City
 	 * @return whether the City can go there
 	 */
-	public boolean placeCity(Player p, VertexLocation loc) {
-
-		Structure s = board.getStructure(loc);
-
-		if (!s.getOwner().equals(p)) {
-			return false;
-			//TODO: throw error about unowned settlement
-		}
-
-		Structure c = new City(s.getLocation());
-		c.setOwner(s.getOwner());
-		board.setStructure(loc, c);
-
-		return true;
+	public boolean placeCity(VertexLocation loc, Player p) {
+		return board.placeCity(loc, p);
 	}
 
 	/**

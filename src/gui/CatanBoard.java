@@ -1217,7 +1217,8 @@ public class CatanBoard extends JPanel{
 						//System.out.println(loc.getXCoord());
 						//System.out.println(loc.getYCoord());
 						//highlightTile(tiles[loc.getXCoord()][loc.getYCoord()], g2);
-						if (game.getBoard().placeStructure(loc, GameRunner.getCurrentPlayer())) {
+						if (game.placeStructure(loc, GameRunner.getCurrentPlayer())) {
+							game.buySettlement(GameRunner.getCurrentPlayer());
 							index--;
 						}
 						if (index == 0) {
@@ -1238,7 +1239,8 @@ public class CatanBoard extends JPanel{
 						//System.out.println(loc.getYCoord());
 						//System.out.println(loc.getOrientation());
 						//highlightTile(tiles[loc.getXCoord()][loc.getYCoord()], g2);
-						if (game.getBoard().placeRoad(loc, GameRunner.getCurrentPlayer())) {
+						if (game.placeRoad(loc, GameRunner.getCurrentPlayer())) {
+							game.buyRoad(GameRunner.getCurrentPlayer());
 							index--;
 						}
 						if (index == 0) {
@@ -1251,7 +1253,8 @@ public class CatanBoard extends JPanel{
 				if (p != null){
 					VertexLocation loc = pxToStructure(p);
 					if (loc != null) {
-						if (game.getBoard().placeCity(loc, GameRunner.getCurrentPlayer())) {
+						if (game.placeCity(loc, GameRunner.getCurrentPlayer())) {
+							game.buyCity(GameRunner.getCurrentPlayer());
 							index--;
 						}
 						if (index == 0) {
@@ -1333,8 +1336,7 @@ public class CatanBoard extends JPanel{
 
 	/**
 	 * Puts CatanBoard in placing settlement state in setup
-	 * @param s how many to be placed
-	 */
+     */
 	public void placeCapitol() {
 		index = 1;
 		state = 5;

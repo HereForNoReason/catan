@@ -6,7 +6,7 @@ import gui.PlayerSelectionApp;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class GameRunner {
 	
@@ -16,29 +16,40 @@ public class GameRunner {
 	private static ArrayList<Player> players = new ArrayList<Player>();
 	private static Game game;
 	private static Player winner;
+	private static PlayerSelectionApp select;
 
 	public static void main(String[] args) {
 
-		PlayerSelectionApp select = new  PlayerSelectionApp();
-		 numberPlayers = select.getSelectedPlayerCount();
-
-		 players.add(new Player("Player 1", Color.ORANGE, 10,10,10,10,10,10));
-		 players.add(new Player("Player 2", Color.BLACK));
-		 players.add(new Player("Player 3", Color.RED));
-		 players.add(new Player("Player 4", Color.BLUE));
-		 start();
-		numberPlayers = players.size();
+        select = new  PlayerSelectionApp();
 
 
 	}
 
-	public static void start(){
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				GameWindow tmp = new GameWindow(players);
-				game = tmp.getBoard().getGame();
+	private static String getPlayerName(int id) {
+		String playername = "";
+		String finalPlayername = playername;
+		while (playername.isEmpty() || players.stream().anyMatch(p -> p.getName().equals(finalPlayername))) {
+			playername	= JOptionPane.showInputDialog("Player " + id + ", please enter your name");
+			if (playername == null) // Cancel
+				System.exit(0);
+		}
+		return playername;
+	}
+
+	public static void start() {
+		SwingUtilities.invokeLater(() -> {
+			numberPlayers = select.getSelectedPlayerCount();
+
+			players.add(new Player(getPlayerName(1), Color.BLUE));
+			players.add(new Player(getPlayerName(2), Color.BLACK));
+			players.add(new Player(getPlayerName(3), Color.RED));
+
+			if(numberPlayers == 4) {
+				players.add(new Player(getPlayerName(4), Color.MAGENTA));
 			}
-		});
+            GameWindow tmp = new GameWindow(players);
+            game = tmp.getBoard().getGame();
+        });
 	}
 	
 	public static Player getCurrentPlayer() {
@@ -52,7 +63,7 @@ public class GameRunner {
 	
 	public static void prevPlayer() {
 		currentPlayer = players.get((index - 1) % numberPlayers);
-		index = (index - 1) % 4;
+		index = (index - 1) % numberPlayers;
 	}
 	
 	public static void setFirstPlayer() {

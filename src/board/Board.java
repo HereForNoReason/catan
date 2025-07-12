@@ -12,9 +12,9 @@ import java.util.Stack;
  */
 public class Board {
 
-	private Tile[][] tiles;
-	private Structure[][][] structures;
-	private Road[][][] roads;
+	private final Tile[][] tiles;
+	private final Structure[][][] structures;
+	private final Road[][][] roads;
 	private Location robberLoc;
 		// Board is slanted backwards, i.e.  \##\
 	private Road endpoint = null; // For DPS
@@ -34,7 +34,7 @@ public class Board {
 		Tile desert = new Tile("DESERT", true);
 
 		// Create the ArrayList of all the tiles to be put in the board, with resource type defined
-		ArrayList<Tile> tileList = new ArrayList<Tile>();
+		ArrayList<Tile> tileList = new ArrayList<>();
 		tileList.add(new Tile("LUMBER")); tileList.add(new Tile("LUMBER")); tileList.add(new Tile("LUMBER")); tileList.add(new Tile("LUMBER"));
 		tileList.add(new Tile("BRICK")); tileList.add(new Tile("BRICK")); tileList.add(new Tile("BRICK"));
 		tileList.add(new Tile("GRAIN")); tileList.add(new Tile("GRAIN")); tileList.add(new Tile("GRAIN")); tileList.add(new Tile("GRAIN"));
@@ -102,14 +102,12 @@ public class Board {
 			if (numberTile == 18){
 				break;
 			}
-			
-			if (tiles[tileOrder[n]][tileOrder[n+1]].getType().equals("DESERT")) {
-			}
-			else {
-				tiles[tileOrder[n]][tileOrder[n+1]].setNumber(numberOrder[numberTile]);
-				numberTile++;
-			}
-		}
+
+            if (!tiles[tileOrder[n]][tileOrder[n + 1]].getType().equals("DESERT")) {
+                tiles[tileOrder[n]][tileOrder[n+1]].setNumber(numberOrder[numberTile]);
+                numberTile++;
+            }
+        }
 
 		// Place all the empty Tiles in Board
 		for (int i = 0; i < tiles.length; i++) {
@@ -123,7 +121,7 @@ public class Board {
 		for (int row = 0; row < structures.length; row++) {
 			for (int col = 0; col < structures[0].length; col++) {
 				for (int ori = 0; ori < structures[0][0].length; ori++) {
-					structures[col][row][ori] = new Settlement(col, row, ori);
+					structures[col][row][ori] = new Structure(col, row, ori);
 				}
 			}
 		}
@@ -151,7 +149,7 @@ public class Board {
 				continue;
 			}
 
-			ArrayList<Structure> rollStructures = new ArrayList<Structure>();
+			ArrayList<Structure> rollStructures = new ArrayList<>();
 
 			Location loc = t.getLocation();
 
@@ -177,7 +175,7 @@ public class Board {
 	 */
 	private ArrayList<Tile> getTilesWithNumber(int numb) {
 
-		ArrayList<Tile> rollTiles = new ArrayList<Tile>();
+		ArrayList<Tile> rollTiles = new ArrayList<>();
 
 		for (int i = 1; i < tiles.length; i++) {
 			for (int j = 1; j < tiles[i].length; j++) {
@@ -186,33 +184,6 @@ public class Board {
 			}
 		}
 		return rollTiles;
-	}
-
-	/**
-	 * Getter for the Structure at the given location
-	 * @param loc the location to retrieve from
-	 * @return the Structure from that place
-	 */
-	public Structure getStructure(VertexLocation loc) {
-		return structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()];
-	}
-
-	/**
-	 * Setter for the Structure at given location
-	 * @param loc the location to change
-	 * @param s the Structure to set it to
-	 */
-	public void setStructure(VertexLocation loc, Structure s) {
-		structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()] = s;
-	}
-
-	/**
-	 * Getter for the Road at the given location
-	 * @param loc the location to retrieve from
-	 * @return the Road from that place
-	 */
-	public Road getRoad(EdgeLocation loc) {
-		return roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()];
 	}
 
 	/**
@@ -426,8 +397,8 @@ public class Board {
 	 */
 	public ArrayList<Player> getRobberAdjacentPlayers() {
 		Location loc = getRobberLocation();
-		ArrayList<Structure> temp = new ArrayList<Structure>();
-		ArrayList<Player> players = new ArrayList<Player>();
+		ArrayList<Structure> temp = new ArrayList<>();
+		ArrayList<Player> players = new ArrayList<>();
 		temp.add(structures[loc.getXCoord()][loc.getYCoord()][0]);
 		temp.add(structures[loc.getXCoord() + 1][loc.getYCoord() + 1][1]);
 		temp.add(structures[loc.getXCoord()][loc.getYCoord() - 1][0]);
@@ -457,11 +428,11 @@ public class Board {
 
 	/**
 	 * Gives the tiles adjacent to the given VertexLocation
-	 * @param VertexLocation location being checked
-	 * @return ArrayList<Tile> list of adjacent tiles
+	 * @param loc location being checked
+	 * @return list of adjacent tiles
 	 */
 	public ArrayList<Tile> getAdjacentTilesStructure(VertexLocation loc) {
-		ArrayList<Tile> output = new ArrayList<Tile>();
+		ArrayList<Tile> output = new ArrayList<>();
 		if (loc.getOrientation() == 0) {
 			Tile a = tiles[loc.getXCoord()][loc.getYCoord()];
 			if (a.getType() != null)
@@ -489,26 +460,26 @@ public class Board {
 
 	/**
 	 * Finds the length of the longest chain of roads of the given player
-	 * @param player player's roads to be analyzed
+	 * @param p player's roads to be analyzed
 	 * @return int length of the longest chain of roads
 	 */
-	public int findLongestRoad(Player p) { //TODO test
-		ArrayList<Road> roadList = (ArrayList<Road>) p.getRoads().clone();
+	public int findLongestRoad(Player p) { //TODO fix this
+		ArrayList<Road> roadList = new ArrayList<>(p.getRoads());
 		int maxCount = 1;
 
-		while (roadList.size() > 0) {
-			ArrayList<Road> connectedRoads = new ArrayList<Road>();
+		while (!roadList.isEmpty()) {
+			ArrayList<Road> connectedRoads = new ArrayList<>();
 			connectedRoads.add(roadList.remove(0));
 
-			for (int i = 0; i <= connectedRoads.size(); i++) {
+			for (int i = 0; i < connectedRoads.size(); i++) {
 				ArrayList<Road> adjacentRoads = findAdjacentRoads(connectedRoads.get(i).getLocation());
 
-				for (int k = 0; k <= adjacentRoads.size(); k++) {
-					int index = roadList.indexOf(adjacentRoads.get(k));
-					if (index >= 0) {
-						connectedRoads.add(roadList.remove(index));
-					}
-				}
+                for (Road adjacentRoad : adjacentRoads) {
+                    int index = roadList.indexOf(adjacentRoad);
+                    if (index >= 0) {
+                        connectedRoads.add(roadList.remove(index));
+                    }
+                }
 			}
 
 			if (endpoint == null) {
@@ -521,13 +492,13 @@ public class Board {
 				}
 			}
 
-			Stack<Road> s = new Stack();
-			Stack<VertexLocation> entrysides = new Stack();
+			Stack<Road> s = new Stack<>();
+			Stack<VertexLocation> entrysides = new Stack<>();
 			s.push(endpoint);
 
 			entrysides.push(startside);
 			int count = 1;
-			while (s.empty() == false) {
+			while (!s.empty()) {
 				s.peek().visit();
 				ArrayList<Road> children = findAdjacentRoadsDFS(s.peek(),entrysides.peek());
 				for (int i = 0; i < children.size(); i++) {
@@ -536,7 +507,7 @@ public class Board {
 						i--;
 					}
 				}
-				if (children.size() <= 0) {
+				if (children.isEmpty()) {
 					s.pop();
 					entrysides.pop();
 					if (count >= maxCount)
@@ -550,9 +521,9 @@ public class Board {
 				}
 			}
 
-			for (int i = 0; i < connectedRoads.size();i++) {  //Reset boolean visited
-				connectedRoads.get(i).resetVisited();
-			}
+            for (Road connectedRoad : connectedRoads) {  //Reset boolean visited
+                connectedRoad.resetVisited();
+            }
 		}
 
 		endpoint = null; //Reset endpoint
@@ -567,8 +538,8 @@ public class Board {
 	 * @return ArrayList<Road> of connected roads
 	 */
 	private ArrayList<Road> findAdjacentRoads(EdgeLocation loc) {
-		Road r = roads[loc.getXCoord()][loc.getYCoord()][0];
-		ArrayList<Road> output = new ArrayList<Road>();
+		Road r = roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()];
+		ArrayList<Road> output = new ArrayList<>();
 		Player p = r.getOwner();
 		int x = loc.getXCoord();
 		int y = loc.getYCoord();
@@ -671,11 +642,11 @@ public class Board {
 	/**
 	 * Finds all adjacent and connected roads by longest road standards to the given location on the opposite side of the entry side
 	 * Prerequisite: Given location has a road that has an owner.
-	 * @param loc location of road
+	 * @param r location of road
 	 * @return ArrayList<Road> of connected roads
 	 */
 	private ArrayList<Road> findAdjacentRoadsDFS(Road r, VertexLocation entryside) {
-		ArrayList<Road> check = new ArrayList<Road>();
+		ArrayList<Road> check = new ArrayList<>();
 		Structure s = structures[entryside.getXCoord()][entryside.getYCoord()][entryside.getOrientation()];
 		Player p = r.getOwner();
 		int x = r.getLocation().getXCoord();
@@ -714,12 +685,11 @@ public class Board {
 		}
 
 		for (int i = 0; i < check.size(); i++){
-			if (p.equals(check.get(i).getOwner()));
-			else{
-				check.remove(i);
-				i--;
-			}
-		}
+            if (!p.equals(check.get(i).getOwner())) {
+                check.remove(i);
+                i--;
+            }
+        }
 		return check;
 	}
 
@@ -797,7 +767,7 @@ public class Board {
 	
 	/**
 	 * Checks if given VertexLocation is a port, and returns the portTag is it is.
-	 * @param loc
+	 * @param loc the location to check at
 	 * @return int portTag if port, -1 if not
 	 * 				  0 = general
 					  1 = brick

@@ -34,11 +34,13 @@ public class BottomBar extends JPanel{
 		for (int i = 0; i < GameRunner.getNumbPlayers(); i++) {
 			ArrayList<KComponent> components = new ArrayList<KComponent>();
 			components.add(new KComponent(new JLabel(GameRunner.getPlayer(i).getName()), new Rectangle(i,0,1,1)));
+			components.get(0).getComponent().setForeground(GameRunner.getPlayer(i).getColor());
+			components.get(0).getComponent().setFont(new Font("Arial", Font.BOLD, 20));
 			add(components.get(0).getComponent(), components.get(0).getRectangle());
 			
 			for (int k = 1; k <= 11; k++) {
 				components.add(new KComponent(new JLabel(""), new Rectangle(i,k,1,1)));
-				components.get(k).getComponent().setFont(new Font("Arial", 1, 20));
+				components.get(k).getComponent().setFont(new Font("Arial", Font.BOLD, 20));
 				add(components.get(k).getComponent(), components.get(k).getRectangle());
 			}
 			

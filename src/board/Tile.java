@@ -42,7 +42,7 @@ public class Tile {
 	/**
 	 * Constructor, only initializing type and hasRobber
 	 * @param str the resource type
-	 * @param boolean whether tile has robber
+	 * @param b whether tile has robber
 	 */
 	public Tile(String str, boolean b) {
 		type = str;

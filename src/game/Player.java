@@ -144,7 +144,7 @@ public class Player {
 
 	/**
 	 * Getter for this player's roads
-	 * @return ArrayList<Road> list or owned roads
+	 * @return list or owned roads
 	 */
 	public ArrayList<Road> getRoads(){
 		return roads;

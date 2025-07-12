@@ -1,25 +1,35 @@
 package board;
 
-import java.util.ArrayList;
-
 import game.Player;
 
 
 /**
  * This is a superclass for Settlement and City
  */
-public abstract class Structure {
+public class Structure {
 	
 	private Player owner = null;
 	private VertexLocation location;
 	private int type;
 		// Either 0 (Settlement), or 1 (City)
-	
+
+	/**
+	 * Constructor with three values to be used for the Structure's location
+	 * @param x the x coordinate of the location
+	 * @param y the y coordinate of the location
+	 * @param o the orientation of the location
+	 */
+	public Structure(int x, int y, int o) {
+		setLocation(new VertexLocation(x, y, o));
+		setType(0);
+	}
 	/**
 	 * This method will give resources of type resType to the owner of the Structure
 	 * @param resType the type of resource to be given to the owner
 	 */
-	public abstract void giveResources(String resType);
+	public void giveResources(String resType) {
+		getOwner().setNumberResourcesType(resType, getOwner().getNumberResourcesType(resType) + 1 + getType());
+	}
 
 	/**
 	 * Setter for the Structure's owner

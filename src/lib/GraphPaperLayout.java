@@ -43,7 +43,7 @@ import java.util.Hashtable;
  * sheet of graph paper.  When a component is added to the layout
  * manager, the location and relative size of the component are
  * simply supplied by the constraints as a Rectangle.
- * <p><code><pre>
+ * <p><code>
  * import java.awt.*;
  * import java.applet.Applet;
  * public class ButtonGrid extends Applet {
@@ -63,7 +63,7 @@ import java.util.Hashtable;
  *         add(new Button("6"), new Rectangle(2,3,1,2));
  *     }
  * }
- * </pre></code>
+ * </code>
  *
  * @author      Michael Martak
  */
@@ -187,7 +187,6 @@ public class GraphPaperLayout implements LayoutManager2 {
      *                    calculating minimum size.
      * @return the dimensions to lay out the subcomponents of the specified
      *         container.
-     * @see java.lib.GraphPaperLayout#getLargestCellSize
      */
     protected Dimension getLayoutSize(Container parent, boolean isPreferred) {
         Dimension largestSize = getLargestCellSize(parent, isPreferred);

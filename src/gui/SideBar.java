@@ -38,6 +38,7 @@ public class SideBar extends JPanel {
 	private boolean done = false;
 	private ComponentList stealPanel			= new ComponentList();
 	private ComponentList placePanel			= new ComponentList();
+	private ComponentList cancelPlacePanel		= new ComponentList();
 
 	private ComponentList setupPanel			= new ComponentList();
 	private ComponentList inputResourcesPanel	= new ComponentList();
@@ -343,16 +344,15 @@ public class SideBar extends JPanel {
 			public void actionPerformed(ActionEvent a) {
 				Game g = display.getBoard().getGame();
 
-				int bought = g.buySettlement(GameRunner.getCurrentPlayer());
+				int bought = g.canBuySettlement(GameRunner.getCurrentPlayer());
 
 				if (bought == 0) {
 					display.getBoard().placeSettlement(1);
-					placePanel("Place a settlement...");
+					placeCancelPanel("Place a settlement...");
 					timer = new Timer(INTERVAL,
 							new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
 							if(display.getBoard().getState() == 2){
-
 							}
 							else {
 								buyPanel();
@@ -378,11 +378,11 @@ public class SideBar extends JPanel {
 			public void actionPerformed(ActionEvent a) {
 				Game g = display.getBoard().getGame();
 
-				int bought = g.buyCity(GameRunner.getCurrentPlayer());
+				int bought = g.canBuyCity(GameRunner.getCurrentPlayer());
 
 				if (bought == 0) {
 					display.getBoard().placeCity(1);
-					placePanel("Select a settlement...");
+					placeCancelPanel("Select a settlement...");
 					timer = new Timer(INTERVAL,
 							new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
@@ -413,11 +413,11 @@ public class SideBar extends JPanel {
 			public void actionPerformed(ActionEvent a) {
 				Game g = display.getBoard().getGame();
 
-				int bought = g.buyRoad(GameRunner.getCurrentPlayer());
+				int bought = g.canBuyRoad(GameRunner.getCurrentPlayer());
 
 				if (bought == 0) {
 					display.getBoard().placeRoad(1);
-					placePanel("Place a road...");
+					placeCancelPanel("Place a road...");
 					timer = new Timer(INTERVAL,
 							new ActionListener() {
 						public void actionPerformed(ActionEvent evt) {
@@ -579,6 +579,22 @@ public class SideBar extends JPanel {
 		JLabel mess = new JLabel();
 		mess.setFont(font);
 		placePanel.add(mess, new Rectangle(2,8,10,4));
+
+		// Cancellable Place Panel
+
+		JLabel mess2 = new JLabel();
+		mess2.setFont(font);
+		cancelPlacePanel.add(mess2, new Rectangle(2,8,10,4));
+
+		JButton cancel = new JButton(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				buyPanel();
+				display.getBoard().setState(0);
+			}
+		});
+		cancel.setText("Cancel");
+		cancelPlacePanel.add(new KComponent(cancel, new Rectangle(4,6,6,3)));
 
 		// Setup panel
 		//-------------------------------------------------------------------
@@ -950,14 +966,18 @@ public class SideBar extends JPanel {
 		setPanel(placePanel);
 	}
 
+	public void placeCancelPanel(String str) {
+		((JLabel) cancelPlacePanel.get(0).getComponent()).setText(str);
+		setPanel(cancelPlacePanel);
+	}
+
 	/**
 	 * 
 	 * 
 	 * @param n Number of resources to be selected, -1 for any
 	 * @param p the player inputting resources
 	 * @param str to display on submit button
-	 * @return ArrayList<String> of resources selected
-	 */
+     */
 	public void inputResourcesPanel(final int n, final Player p, String str, final boolean YOP) {
 		//final ArrayList<String> output = new ArrayList<String>();
 		IRPdone = false;
@@ -1088,5 +1108,8 @@ public class SideBar extends JPanel {
 		JLabel win = new JLabel(GameRunner.getWinner().getName() + " wins!");
 		win.setFont(new Font("Arial", 1, 24));
 		this.add(win, new Rectangle(2,4,10,5));
+
+		repaint();
+		validate();
 	}
 }
