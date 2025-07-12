@@ -15,7 +15,7 @@ public class SideBar extends JPanel {
 
     public final static int INTERVAL = 50;
     private final GameWindow display;
-    private final Font font = new Font("Arial", 1, 16);
+    private final Font font = new Font("Arial", Font.BOLD, 16);
     private final ComponentList rollPanel = new ComponentList();
     private final ComponentList mainPanel = new ComponentList();
     private final ComponentList buyPanel = new ComponentList();
@@ -31,12 +31,12 @@ public class SideBar extends JPanel {
     private final ComponentList cancelPlacePanel = new ComponentList();
     private final ComponentList setupPanel = new ComponentList();
     private final ComponentList inputResourcesPanel = new ComponentList();
-    private ArrayList<String> inputResources = new ArrayList<String>();
-    private ArrayList<String> offerResources = new ArrayList<String>();
-    private ArrayList<String> sellResources = new ArrayList<String>();
+    private ArrayList<String> inputResources = new ArrayList<>();
+    private ArrayList<String> offerResources = new ArrayList<>();
+    private ArrayList<String> sellResources = new ArrayList<>();
     private Player tradeChoice;
     //private final ExecutorService pool;
-    private boolean IRPdone = true;
+    private boolean IRPDone = true;
     private boolean secondRound = false;
     private int count = 0;
     private final KComponent currentPlayerBox;
@@ -86,53 +86,48 @@ public class SideBar extends JPanel {
                             remove = GameRunner.getPlayer(0).getTotalResources() / 2;
                         inputResourcesPanel(remove, GameRunner.getPlayer(0), "Remove " + remove + " resources", false);
                         timer = new Timer(INTERVAL,
-                                new ActionListener() {
-                                    public void actionPerformed(ActionEvent evt) {
-                                        if (IRPdone) {
-                                            timer.stop();
-                                            GameRunner.getPlayer(0).removeResources(inputResources);
-                                            int remove = 0;
-                                            if (GameRunner.getPlayer(1).getTotalResources() > 7)
-                                                remove = GameRunner.getPlayer(1).getTotalResources() / 2;
-                                            inputResourcesPanel(remove, GameRunner.getPlayer(1), "Remove " + remove + " resources", false);
-                                            timer = new Timer(INTERVAL,
-                                                    new ActionListener() {
-                                                        public void actionPerformed(ActionEvent evt) {
-                                                            if (IRPdone) {
-                                                                timer.stop();
-                                                                GameRunner.getPlayer(1).removeResources(inputResources);
-                                                                int remove = 0;
-                                                                if (GameRunner.getPlayer(2).getTotalResources() > 7)
-                                                                    remove = GameRunner.getPlayer(2).getTotalResources() / 2;
-                                                                inputResourcesPanel(remove, GameRunner.getPlayer(2), "Remove " + remove + " resources", false);
-                                                                timer = new Timer(INTERVAL,
-                                                                        new ActionListener() {
-                                                                            public void actionPerformed(ActionEvent evt) {
-                                                                                if (IRPdone) {
-                                                                                    timer.stop();
-                                                                                    GameRunner.getPlayer(2).removeResources(inputResources);
-                                                                                    display.getBoard().placeRobber();
-                                                                                    placePanel("Move the robber...");
-                                                                                    timer = new Timer(INTERVAL,
-                                                                                            new ActionListener() {
-                                                                                                public void actionPerformed(ActionEvent evt) {
-                                                                                                    if (display.getBoard().getState() == 1) {
-                                                                                                    } else {
-                                                                                                        timer.stop();
-                                                                                                        stealPanel();
-                                                                                                    }
-                                                                                                }
-                                                                                            });
-                                                                                    timer.start();
-                                                                                }
-                                                                            }
-                                                                        });
-                                                                timer.start();
-                                                            }
-                                                        }
-                                                    });
-                                            timer.start();
-                                        }
+                                evt -> {
+                                    if (IRPDone) {
+                                        timer.stop();
+                                        GameRunner.getPlayer(0).removeResources(inputResources);
+                                        int remove1 = 0;
+                                        if (GameRunner.getPlayer(1).getTotalResources() > 7)
+                                            remove1 = GameRunner.getPlayer(1).getTotalResources() / 2;
+                                        inputResourcesPanel(remove1, GameRunner.getPlayer(1), "Remove " + remove1 + " resources", false);
+                                        timer = new Timer(INTERVAL,
+                                                evt1 -> {
+                                                    if (IRPDone) {
+                                                        timer.stop();
+                                                        GameRunner.getPlayer(1).removeResources(inputResources);
+                                                        int remove2 = 0;
+                                                        if (GameRunner.getPlayer(2).getTotalResources() > 7)
+                                                            remove2 = GameRunner.getPlayer(2).getTotalResources() / 2;
+                                                        inputResourcesPanel(remove2, GameRunner.getPlayer(2), "Remove " + remove2 + " resources", false);
+                                                        timer = new Timer(INTERVAL,
+                                                                new ActionListener() {
+                                                                    public void actionPerformed(ActionEvent evt1) {
+                                                                        if (IRPDone) {
+                                                                            timer.stop();
+                                                                            GameRunner.getPlayer(2).removeResources(inputResources);
+                                                                            display.getBoard().placeRobber();
+                                                                            placePanel("Move the robber...");
+                                                                            timer = new Timer(INTERVAL,
+                                                                                    new ActionListener() {
+                                                                                        public void actionPerformed(ActionEvent evt1) {
+                                                                                            if (display.getBoard().getState() != 1) {
+                                                                                                timer.stop();
+                                                                                                stealPanel();
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                            timer.start();
+                                                                        }
+                                                                    }
+                                                                });
+                                                        timer.start();
+                                                    }
+                                                });
+                                        timer.start();
                                     }
                                 });
                         timer.start();
@@ -145,7 +140,7 @@ public class SideBar extends JPanel {
                         timer = new Timer(INTERVAL,
                                 new ActionListener() {
                                     public void actionPerformed(ActionEvent evt) {
-                                        if (IRPdone) {
+                                        if (IRPDone) {
                                             timer.stop();
                                             GameRunner.getPlayer(0).removeResources(inputResources);
                                             int remove = 0;
@@ -155,7 +150,7 @@ public class SideBar extends JPanel {
                                             timer = new Timer(INTERVAL,
                                                     new ActionListener() {
                                                         public void actionPerformed(ActionEvent evt) {
-                                                            if (IRPdone) {
+                                                            if (IRPDone) {
                                                                 timer.stop();
                                                                 GameRunner.getPlayer(1).removeResources(inputResources);
                                                                 int remove = 0;
@@ -165,7 +160,7 @@ public class SideBar extends JPanel {
                                                                 timer = new Timer(INTERVAL,
                                                                         new ActionListener() {
                                                                             public void actionPerformed(ActionEvent evt) {
-                                                                                if (IRPdone) {
+                                                                                if (IRPDone) {
                                                                                     timer.stop();
                                                                                     GameRunner.getPlayer(2).removeResources(inputResources);
                                                                                     int remove = 0;
@@ -175,7 +170,7 @@ public class SideBar extends JPanel {
                                                                                     timer = new Timer(INTERVAL,
                                                                                             new ActionListener() {
                                                                                                 public void actionPerformed(ActionEvent evt) {
-                                                                                                    if (IRPdone) {
+                                                                                                    if (IRPDone) {
                                                                                                         timer.stop();
                                                                                                         GameRunner.getPlayer(3).removeResources(inputResources);
                                                                                                         display.getBoard().placeRobber();
@@ -183,8 +178,7 @@ public class SideBar extends JPanel {
                                                                                                         timer = new Timer(INTERVAL,
                                                                                                                 new ActionListener() {
                                                                                                                     public void actionPerformed(ActionEvent evt) {
-                                                                                                                        if (display.getBoard().getState() == 1) {
-                                                                                                                        } else {
+                                                                                                                        if (display.getBoard().getState() != 1) {
                                                                                                                             timer.stop();
                                                                                                                             stealPanel();
                                                                                                                         }
@@ -287,7 +281,7 @@ public class SideBar extends JPanel {
                                     timer = new Timer(INTERVAL,
                                             new ActionListener() {
                                                 public void actionPerformed(ActionEvent evt) {
-                                                    if (IRPdone) {
+                                                    if (IRPDone) {
                                                         timer.stop();
                                                         display.getBoard().getGame().npcTrade(GameRunner.getCurrentPlayer(), res, inputResources);
                                                         mainPanel();
@@ -304,7 +298,7 @@ public class SideBar extends JPanel {
         tradeStock.setText("the stock");
         tradePanel.add(new KComponent(tradeStock, new Rectangle(7, 6, 6, 2)));
 
-        // Return to main panel
+        // Return to the main panel
         JButton returnMain = new JButton(new AbstractAction() {
             public void actionPerformed(ActionEvent a) {
                 mainPanel();
@@ -332,8 +326,7 @@ public class SideBar extends JPanel {
                     timer = new Timer(INTERVAL,
                             new ActionListener() {
                                 public void actionPerformed(ActionEvent evt) {
-                                    if (display.getBoard().getState() == 2) {
-                                    } else {
+                                    if (display.getBoard().getState() != 2) {
                                         buyPanel();
                                         timer.stop();
                                     }
@@ -363,9 +356,7 @@ public class SideBar extends JPanel {
                     timer = new Timer(INTERVAL,
                             new ActionListener() {
                                 public void actionPerformed(ActionEvent evt) {
-                                    if (display.getBoard().getState() == 4) {
-
-                                    } else {
+                                    if (display.getBoard().getState() != 4) {
                                         buyPanel();
                                         timer.stop();
                                     }
@@ -395,9 +386,7 @@ public class SideBar extends JPanel {
                     timer = new Timer(INTERVAL,
                             new ActionListener() {
                                 public void actionPerformed(ActionEvent evt) {
-                                    if (display.getBoard().getState() == 3) {
-
-                                    } else {
+                                    if (display.getBoard().getState() != 3) {
                                         buyPanel();
                                         timer.stop();
                                     }
@@ -414,7 +403,7 @@ public class SideBar extends JPanel {
         buyRoad.setText("road");
         buyPanel.add(new KComponent(buyRoad, new Rectangle(1, 8, 6, 2)));
 
-        // Return to main panel
+        // Return to the main panel
         buyPanel.add(new KComponent(returnMain, new Rectangle(3, 12, 8, 2)));
 
         // Error panel:
@@ -427,9 +416,6 @@ public class SideBar extends JPanel {
         JButton accept = new JButton(new AbstractAction() {
             public void actionPerformed(ActionEvent a) {
                 switch (flag) {
-                    case 0:
-                        setPanel(mainPanel);
-                        break;
                     case 1:
                         setPanel(tradePanel);
                         break;
@@ -449,7 +435,7 @@ public class SideBar extends JPanel {
         errorPanel.add(accept, new Rectangle(3, 7, 9, 2));
 
 
-        // Return to main panel
+        // Return to the main panel
         devPanel.add(new KComponent(returnMain, new Rectangle(3, 12, 8, 2)));
 
         // Steal panel:
@@ -470,7 +456,7 @@ public class SideBar extends JPanel {
         // Choose Trade Partner Panel:
         //-------------------------------------------------------------------
 
-        JComboBox<Player> playerTradeBox = new JComboBox<Player>();
+        JComboBox<Player> playerTradeBox = new JComboBox<>();
         playerTradeBox.setAction(new AbstractAction() {
             public void actionPerformed(ActionEvent a) {
                 //System.out.println("action!");
@@ -481,14 +467,14 @@ public class SideBar extends JPanel {
                 timer = new Timer(INTERVAL,
                         new ActionListener() {
                             public void actionPerformed(ActionEvent evt) {
-                                if (IRPdone) {
+                                if (IRPDone) {
                                     timer.stop();
                                     offerResources = inputResources;
                                     inputResourcesPanel(-1, tradeChoice, "Sell resources", false);
                                     timer = new Timer(INTERVAL,
                                             new ActionListener() {
                                                 public void actionPerformed(ActionEvent evt) {
-                                                    if (IRPdone) {
+                                                    if (IRPDone) {
                                                         timer.stop();
                                                         sellResources = inputResources;
                                                         display.getBoard().getGame().playerTrade(GameRunner.getCurrentPlayer(), tradeChoice, offerResources, sellResources);
@@ -600,9 +586,7 @@ public class SideBar extends JPanel {
                         timer = new Timer(INTERVAL,
                                 new ActionListener() {
                                     public void actionPerformed(ActionEvent evt) {
-                                        if (display.getBoard().getState() == 5) {
-
-                                        } else {
+                                        if (display.getBoard().getState() != 5) {
                                             timer.stop();
                                             //Place Road commandblock
                                             display.getBoard().placeRoad(1);
@@ -610,9 +594,7 @@ public class SideBar extends JPanel {
                                             timer = new Timer(INTERVAL,
                                                     new ActionListener() {
                                                         public void actionPerformed(ActionEvent evt) {
-                                                            if (display.getBoard().getState() == 3) {
-
-                                                            } else {
+                                                            if (display.getBoard().getState() != 3) {
                                                                 timer.stop();
                                                                 setCurrentPlayer(GameRunner.getCurrentPlayer());
                                                                 start.setText("Place a settlement, " + GameRunner.getCurrentPlayer());
@@ -635,9 +617,7 @@ public class SideBar extends JPanel {
                         timer = new Timer(INTERVAL,
                                 new ActionListener() {
                                     public void actionPerformed(ActionEvent evt) {
-                                        if (display.getBoard().getState() == 5) {
-
-                                        } else {
+                                        if (display.getBoard().getState() != 5) {
                                             timer.stop();
                                             //Place Road commandblock
                                             display.getBoard().placeRoad(1);
@@ -645,9 +625,7 @@ public class SideBar extends JPanel {
                                             timer = new Timer(INTERVAL,
                                                     new ActionListener() {
                                                         public void actionPerformed(ActionEvent evt) {
-                                                            if (display.getBoard().getState() == 3) {
-
-                                                            } else {
+                                                            if (display.getBoard().getState() != 3) {
                                                                 timer.stop();
                                                                 GameRunner.nextPlayer();
                                                                 setCurrentPlayer(GameRunner.getCurrentPlayer());
@@ -673,9 +651,7 @@ public class SideBar extends JPanel {
                         timer = new Timer(INTERVAL,
                                 new ActionListener() {
                                     public void actionPerformed(ActionEvent evt) {
-                                        if (display.getBoard().getState() == 5) {
-
-                                        } else {
+                                        if (display.getBoard().getState() != 5) {
                                             timer.stop();
                                             //Place Road commandblock
                                             display.getBoard().placeRoad(1);
@@ -683,9 +659,7 @@ public class SideBar extends JPanel {
                                             timer = new Timer(INTERVAL,
                                                     new ActionListener() {
                                                         public void actionPerformed(ActionEvent evt) {
-                                                            if (display.getBoard().getState() == 3) {
-
-                                                            } else {
+                                                            if (display.getBoard().getState() != 3) {
                                                                 timer.stop();
                                                                 //Collections.shuffle(GameRunner.players);
                                                                 setCurrentPlayer(GameRunner.getCurrentPlayer());
@@ -708,9 +682,7 @@ public class SideBar extends JPanel {
                         timer = new Timer(INTERVAL,
                                 new ActionListener() {
                                     public void actionPerformed(ActionEvent evt) {
-                                        if (display.getBoard().getState() == 5) {
-
-                                        } else {
+                                        if (display.getBoard().getState() != 5) {
                                             timer.stop();
                                             //Place Road commandblock
                                             display.getBoard().placeRoad(1);
@@ -718,9 +690,7 @@ public class SideBar extends JPanel {
                                             timer = new Timer(INTERVAL,
                                                     new ActionListener() {
                                                         public void actionPerformed(ActionEvent evt) {
-                                                            if (display.getBoard().getState() == 3) {
-
-                                                            } else {
+                                                            if (display.getBoard().getState() != 3) {
                                                                 timer.stop();
                                                                 GameRunner.prevPlayer();
                                                                 setCurrentPlayer(GameRunner.getCurrentPlayer());
@@ -746,7 +716,7 @@ public class SideBar extends JPanel {
         // Input Resources Panel
         //-------------------------------------------------------------------
 
-        JComboBox<Integer> brickCombo = new JComboBox<Integer>();
+        JComboBox<Integer> brickCombo = new JComboBox<>();
         brickCombo.setAction(new AbstractAction() {
             public void actionPerformed(ActionEvent a) {
             }
@@ -754,7 +724,7 @@ public class SideBar extends JPanel {
 
         inputResourcesPanel.add(brickCombo, new Rectangle(2, 6, 3, 1));
 
-        JComboBox<Integer> woolCombo = new JComboBox<Integer>();
+        JComboBox<Integer> woolCombo = new JComboBox<>();
         woolCombo.setAction(new AbstractAction() {
             public void actionPerformed(ActionEvent a) {
             }
@@ -762,7 +732,7 @@ public class SideBar extends JPanel {
 
         inputResourcesPanel.add(woolCombo, new Rectangle(6, 6, 3, 1));
 
-        JComboBox<Integer> oreCombo = new JComboBox<Integer>();
+        JComboBox<Integer> oreCombo = new JComboBox<>();
         oreCombo.setAction(new AbstractAction() {
             public void actionPerformed(ActionEvent a) {
             }
@@ -770,7 +740,7 @@ public class SideBar extends JPanel {
 
         inputResourcesPanel.add(oreCombo, new Rectangle(10, 6, 3, 1));
 
-        JComboBox<Integer> grainCombo = new JComboBox<Integer>();
+        JComboBox<Integer> grainCombo = new JComboBox<>();
         grainCombo.setAction(new AbstractAction() {
             public void actionPerformed(ActionEvent a) {
             }
@@ -778,7 +748,7 @@ public class SideBar extends JPanel {
 
         inputResourcesPanel.add(grainCombo, new Rectangle(4, 10, 3, 1));
 
-        JComboBox<Integer> lumberCombo = new JComboBox<Integer>();
+        JComboBox<Integer> lumberCombo = new JComboBox<>();
         lumberCombo.setAction(new AbstractAction() {
             public void actionPerformed(ActionEvent a) {
             }
@@ -819,23 +789,14 @@ public class SideBar extends JPanel {
         //-------------------------------------------------------------------
 
         setupPanel();
-//		mainPanel();
-//		if (!GameRunner.getCurrentPlayer().getName().equals("DevMaster"))
-//			GameRunner.nextPlayer();
-//		if (!GameRunner.getCurrentPlayer().getName().equals("DevMaster"))
-//			GameRunner.nextPlayer();
-//		if (!GameRunner.getCurrentPlayer().getName().equals("DevMaster"))
-//			GameRunner.nextPlayer();
-//		devPanel();
-//		rollPanel();
     }
 
     private void setPanel(ComponentList cL) {
         this.removeAll();
         this.add(currentPlayerBox.getComponent(), currentPlayerBox.getRectangle());
 
-        for (int i = 0; i < cL.size(); i++) {
-            this.add(cL.get(i).getComponent(), cL.get(i).getRectangle());
+        for (KComponent kComponent : cL) {
+            this.add(kComponent.getComponent(), kComponent.getRectangle());
         }
 
         repaint();
@@ -868,10 +829,6 @@ public class SideBar extends JPanel {
         setPanel(errorPanel);
     }
 
-    public void devPanel() {
-        setPanel(devPanel);
-        flag = 3;
-    }
 
     public void resPanel() {
         setPanel(resPanel);
@@ -887,15 +844,12 @@ public class SideBar extends JPanel {
         });
         ((JComboBox<Player>) stealPanel.get(0).getComponent()).removeAllItems();
         for (int i = 0; i < display.getBoard().getGame().getBoard().getRobberAdjacentPlayers().size(); i++) {
-            if (display.getBoard().getGame().getBoard().getRobberAdjacentPlayers().get(i).equals(GameRunner.getCurrentPlayer())) {
-            } else {
+            if (!display.getBoard().getGame().getBoard().getRobberAdjacentPlayers().get(i).equals(GameRunner.getCurrentPlayer())) {
                 ((JComboBox<Player>) stealPanel.get(0).getComponent()).addItem(display.getBoard().getGame().getBoard().getRobberAdjacentPlayers().get(i));
             }
         }
 
         ((JComboBox<Player>) stealPanel.get(0).getComponent()).setAction(action);
-        //System.out.println(((JComboBox<Player>) stealPanel.get(0).getComponent()).getItemCount());
-        //System.out.println(((JComboBox<Player>) stealPanel.get(0).getComponent()).getItemAt(0));
 
         if (((JComboBox<Player>) stealPanel.get(0).getComponent()).getItemCount() <= 0) {
             //System.out.println("IF");
@@ -918,8 +872,7 @@ public class SideBar extends JPanel {
         ((JComboBox<Player>) choosePlayerPanel.get(0).getComponent()).removeAllItems();
         // Populate combo box
         for (int i = 0; i < GameRunner.getNumbPlayers(); i++) {
-            if (GameRunner.getPlayer(i).equals(GameRunner.getCurrentPlayer())) {
-            } else {
+            if (!GameRunner.getPlayer(i).equals(GameRunner.getCurrentPlayer())) {
                 ((JComboBox<Player>) choosePlayerPanel.get(0).getComponent()).addItem(GameRunner.getPlayer(i));
             }
         }
@@ -941,11 +894,11 @@ public class SideBar extends JPanel {
     /**
      * @param n   Number of resources to be selected, -1 for any
      * @param p   the player inputting resources
-     * @param str to display on submit button
+     * @param str to display "on submit" button
      */
     public void inputResourcesPanel(final int n, final Player p, String str, final boolean YOP) {
         //final ArrayList<String> output = new ArrayList<String>();
-        IRPdone = false;
+        IRPDone = false;
 
         // Depopulates / Repopulates the combo boxes
         for (int i = 0; i < 5; i++) {
@@ -985,7 +938,7 @@ public class SideBar extends JPanel {
             }
         }
 
-        //Sets player
+        //Set player
         ((JLabel) inputResourcesPanel.get(5).getComponent()).setText("Player: " + p.getName());
 
         // Sets action according to flag and resourceCount
@@ -1021,18 +974,8 @@ public class SideBar extends JPanel {
 
                 inputResources = output2;
                 //System.out.println("Arrived");
-                IRPdone = true;
-				/*
-				switch (flag) {
-				case 0:
-					System.out.println(inputResources);
-					System.out.println("blargh");
-					p.removeResources(inputResources);
-					break;
-				case 1:
-					break;
-				}
-				 */
+                IRPDone = true;
+
 
             }
         });
@@ -1041,17 +984,6 @@ public class SideBar extends JPanel {
         ((JButton) inputResourcesPanel.get(6).getComponent()).setText(str);
 
         setPanel(inputResourcesPanel);
-		/*
-		timer = new Timer(INTERVAL,
-				new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						if(continue){
-							return output;
-						}
-					}
-				});
-		timer.start();
-		 */
 
     }
 
@@ -1070,7 +1002,7 @@ public class SideBar extends JPanel {
         this.removeAll();
 
         JLabel win = new JLabel(GameRunner.getWinner().getName() + " wins!");
-        win.setFont(new Font("Arial", 1, 24));
+        win.setFont(new Font("Arial", Font.BOLD, 24));
         this.add(win, new Rectangle(2, 4, 10, 5));
 
         repaint();

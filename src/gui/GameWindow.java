@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class GameWindow {
 
     public final static int INTERVAL = 20;
-    final static int SCRSIZE = 1000; //TODO specify
+    final static int scrSize = 1000; //TODO specify
     CatanBoard board;
     BottomBar bottom;
     SideBar side;
@@ -43,7 +43,7 @@ public class GameWindow {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Dimension d = new Dimension(5, 6);
 
-        frame.setSize(SCRSIZE + 500, SCRSIZE);
+        frame.setSize(scrSize + 500, scrSize);
         //frame.setLayout(new GraphPaperLayout(d));
         Container content = frame.getContentPane();
         content.setLayout(new GraphPaperLayout(d));

@@ -13,8 +13,7 @@ import java.util.ArrayList;
 public class BottomBar extends JPanel {
 
     public final static int INTERVAL = 50;
-    public final static double LIGHTENING_FACTOR = .05;
-    public ArrayList<ArrayList<KComponent>> playerComponents = new ArrayList<ArrayList<KComponent>>();
+    public ArrayList<ArrayList<KComponent>> playerComponents = new ArrayList<>();
     private final Timer timer;
 
     public BottomBar() {
@@ -23,7 +22,7 @@ public class BottomBar extends JPanel {
         setLayout(new GraphPaperLayout(new Dimension(GameRunner.getNumbPlayers(), 8)));
 
         for (int i = 0; i < GameRunner.getNumbPlayers(); i++) {
-            ArrayList<KComponent> components = new ArrayList<KComponent>();
+            ArrayList<KComponent> components = new ArrayList<>();
             components.add(new KComponent(new JLabel(GameRunner.getPlayer(i).getName()), new Rectangle(i, 0, 1, 1)));
             components.get(0).getComponent().setForeground(GameRunner.getPlayer(i).getColor());
             components.get(0).getComponent().setFont(new Font("Arial", Font.BOLD, 20));
