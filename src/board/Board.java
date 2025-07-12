@@ -203,6 +203,7 @@ public class Board {
 
     /**
      * Assigns the settlement to the given player, even without a road
+     * this is needed for the initial game setup
      *
      * @param loc    Location of settlement
      * @param player Player placing the settlement
@@ -336,7 +337,6 @@ public class Board {
                 return false;
             }
         }
-        //roads[loc.getXCoordination()][loc.getYCoordination()][loc.getOrientation()].setOwner(player);
     }
 
     /**
@@ -420,15 +420,6 @@ public class Board {
         return players;
     }
 
-    /**
-     * Getter for the Tile at the given Location
-     *
-     * @param loc the Location to retrieve from
-     * @return the Tile there
-     */
-    public Tile getTile(Location loc) {
-        return tiles[loc.getXCoord()][loc.getYCoord()];
-    }
 
     /**
      * Gives the tiles adjacent to the given VertexLocation

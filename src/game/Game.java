@@ -26,16 +26,6 @@ public class Game {
 
         if (givenPlayers.size() < 3 || givenPlayers.size() > 4)
             throw new IllegalArgumentException("Game must be played with three or four players");
-
-        ArrayList<String> names = new ArrayList<>();
-        for (Player p : givenPlayers) {
-            names.add(p.getName());
-        }
-        for (String s : names) {
-            if (Collections.frequency(names, s) > 1)
-                throw new IllegalArgumentException("Players must have different names");
-        }
-
         Collections.shuffle(givenPlayers);
 
         players = givenPlayers;
