@@ -5,8 +5,6 @@ import lib.GraphPaperLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 
@@ -14,8 +12,8 @@ public class GameWindow {
 
     public final static int INTERVAL = 20;
     final static int scrSize = 1000; //TODO specify
-    CatanBoard board;
-    BottomBar bottom;
+    final CatanBoard board;
+    final BottomBar bottom;
     SideBar side;
 
 
@@ -26,12 +24,10 @@ public class GameWindow {
         createAndShowGUI();
 
         Timer timer = new Timer(INTERVAL,
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        // Refresh the board
-                        board.repaint(); //TODO fix validate
-                        bottom.repaint();
-                    }
+                evt -> {
+                    // Refresh the board
+                    board.repaint(); //TODO fix validate
+                    bottom.repaint();
                 });
 
         timer.start();

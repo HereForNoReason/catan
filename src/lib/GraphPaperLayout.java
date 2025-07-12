@@ -75,14 +75,6 @@ public class GraphPaperLayout implements LayoutManager2 {
     Hashtable<Component, Rectangle> compTable; //constraints (Rectangles)
 
     /**
-     * Creates a graph paper layout with a default of a 1 x 1 graph, with no
-     * vertical or horizontal padding.
-     */
-    public GraphPaperLayout() {
-        this(new Dimension(1,1));
-    }
-
-    /**
      * Creates a graph paper layout with the given grid size, with no vertical
      * or horizontal padding.
      */
@@ -104,28 +96,7 @@ public class GraphPaperLayout implements LayoutManager2 {
         this.gridSize = new Dimension(gridSize);
         this.hgap = hgap;
         this.vgap = vgap;
-        compTable = new Hashtable<Component, Rectangle>();
-    }
-
-    /**
-     * @return the size of the graph paper in logical units (n x m)
-     */
-    public Dimension getGridSize() {
-        return new Dimension( gridSize );
-    }
-
-    /**
-     * Set the size of the graph paper in logical units (n x m)
-     */
-    public void setGridSize( Dimension d ) {
-        setGridSize( d.width, d.height );
-    }
-
-    /**
-     * Set the size of the graph paper in logical units (n x m)
-     */
-    public void setGridSize( int width, int height ) {
-        gridSize = new Dimension( width, height );
+        compTable = new Hashtable<>();
     }
 
     public void setConstraints(Component comp, Rectangle constraints) {

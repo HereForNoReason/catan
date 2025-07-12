@@ -6,15 +6,12 @@ import lib.GraphPaperLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class BottomBar extends JPanel {
 
     public final static int INTERVAL = 50;
-    public ArrayList<ArrayList<KComponent>> playerComponents = new ArrayList<>();
-    private final Timer timer;
+    public final ArrayList<ArrayList<KComponent>> playerComponents = new ArrayList<>();
 
     public BottomBar() {
         setBackground(new Color(255, 255, 255, 255));
@@ -37,12 +34,10 @@ public class BottomBar extends JPanel {
             playerComponents.add(components);
         }
 
-        timer = new Timer(INTERVAL,
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        for (int i = 0; i < playerComponents.size(); i++) {
-                            updatePlayer(playerComponents.get(i), GameRunner.getPlayer(i));
-                        }
+        Timer timer = new Timer(INTERVAL,
+                evt -> {
+                    for (int i = 0; i < playerComponents.size(); i++) {
+                        updatePlayer(playerComponents.get(i), GameRunner.getPlayer(i));
                     }
                 });
         timer.start();

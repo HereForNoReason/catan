@@ -17,7 +17,6 @@ public class CatanBoard extends JPanel {
 
     private final double sqrt3div2 = 0.86602540378;
     private final int structSize = 12;
-    private final int roadSize = 20;
     private int state = 0;
     //0 = none
     //1 = choosing tile
@@ -30,7 +29,6 @@ public class CatanBoard extends JPanel {
     private int hexagonSide;
     private final int heightMargin = 100;
     private int widthMargin;
-    private final ArrayList<Player> players;
     private final Tile[][] tiles;
     private final Road[][][] roads;
     private final Structure[][][] structures;
@@ -45,7 +43,6 @@ public class CatanBoard extends JPanel {
 
         game = new Game(players);
 
-        this.players = players;
         tiles = game.getBoard().getTiles();
         roads = game.getBoard().getRoads();
         structures = game.getBoard().getStructures();
@@ -318,7 +315,7 @@ public class CatanBoard extends JPanel {
         g2c.transform(rotate);
         g2c.setColor(Color.BLACK);
         g2c.drawString("General 3:1", 0, 0);
-        g2c = (Graphics2D) g2.create();
+        g2.create();
 
     }
 
@@ -617,7 +614,7 @@ public class CatanBoard extends JPanel {
                 return null;
         }
 
-        if (xCoord == 0 || yCoord == 0) {
+        if (xCoord == 0) {
             //System.out.println("I AM THE TRUE NULL");
             return null;
         }
@@ -911,13 +908,12 @@ public class CatanBoard extends JPanel {
         int y = boardHeight - heightMargin - (int) p.getY();
         EdgeLocation output = null;
 
+        int roadSize = 20;
         if (y >= 0 && y < (int) (hexagonSide * 0.5)) {
             x -= widthMargin;
             x -= 2 * (int) (hexagonSide * sqrt3div2);
             int tag = x / (int) (hexagonSide * sqrt3div2);
-            if (tag < 0 || tag > 5) {
-                output = null;
-            } else {
+            if (tag >= 0 && tag <= 5) {
                 output = new EdgeLocation((tag + 1) / 2, 0, (tag + 1) % 2);
             }
         } else if (y >= (int) (hexagonSide * 0.5) && y < (int) (hexagonSide * 1.5)) {
@@ -925,115 +921,85 @@ public class CatanBoard extends JPanel {
             x -= (int) (hexagonSide * sqrt3div2);
             int tag = x / (2 * (int) (hexagonSide * sqrt3div2));
             //System.out.println(tag);
-            if (tag < 0 || tag > 3) {
-                output = null;
-            } else {
+            if (tag >= 0 && tag <= 3) {
                 if (x >= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) - roadSize &&
                         x <= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) + roadSize) {
                     output = new EdgeLocation(tag, 1, 2);
-                } else {
-                    output = null;
                 }
             }
         } else if (y >= (int) (hexagonSide * 1.5) && y < (int) (hexagonSide * 2.0)) {
             x -= widthMargin;
             x -= (int) (hexagonSide * sqrt3div2);
             int tag = x / (int) (hexagonSide * sqrt3div2);
-            if (tag < 0 || tag > 7) {
-                output = null;
-            } else {
+            if (tag >= 0 && tag <= 7) {
                 output = new EdgeLocation((tag + 1) / 2, 1, (tag + 1) % 2);
             }
         } else if (y >= (int) (hexagonSide * 2.0) && y < (int) (hexagonSide * 3.0)) {
             x -= widthMargin;
             int tag = x / (2 * (int) (hexagonSide * sqrt3div2));
-            if (tag < 0 || tag > 4) {
-                output = null;
-            } else {
+            if (tag >= 0 && tag <= 4) {
                 if (x >= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) - roadSize &&
                         x <= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) + roadSize) {
                     output = new EdgeLocation(tag, 2, 2);
-                } else {
-                    output = null;
                 }
             }
         } else if (y >= (int) (hexagonSide * 3.0) && y < (int) (hexagonSide * 3.5)) {
             x -= widthMargin;
             int tag = x / (int) (hexagonSide * sqrt3div2);
-            if (tag < 0 || tag > 9) {
-                output = null;
-            } else {
+            if (tag >= 0 && tag <= 9) {
                 output = new EdgeLocation((tag + 1) / 2, 2, (tag + 1) % 2);
             }
         } else if (y >= (int) (hexagonSide * 3.5) && y < (int) (hexagonSide * 4.5)) {
             x -= widthMargin;
             x += (int) (hexagonSide * sqrt3div2);
             int tag = x / (2 * (int) (hexagonSide * sqrt3div2));
-            if (tag < 0 || tag > 5) {
-                output = null;
-            } else {
+            if (tag >= 0 && tag <= 5) {
                 if (x >= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) - roadSize &&
                         x <= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) + roadSize) {
                     output = new EdgeLocation(tag, 3, 2);
-                } else {
-                    output = null;
                 }
             }
         } else if (y >= (int) (hexagonSide * 4.5) && y < (int) (hexagonSide * 5.0)) {
             x -= widthMargin;
             int tag = x / (int) (hexagonSide * sqrt3div2);
-            if (tag < 0 || tag > 9) {
-                output = null;
-            } else {
+            if (tag >= 0 && tag <= 9) {
                 output = new EdgeLocation(tag / 2 + 1, 3, tag % 2);
             }
         } else if (y >= (int) (hexagonSide * 5.0) && y < (int) (hexagonSide * 6.0)) {
             x -= widthMargin;
             int tag = x / (2 * (int) (hexagonSide * sqrt3div2));
-            if (tag < 0 || tag > 4) {
-                output = null;
-            } else {
+            if (tag >= 0 && tag <= 4) {
                 if (x >= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) - roadSize &&
                         x <= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) + roadSize) {
                     output = new EdgeLocation(tag + 1, 4, 2);
-                } else {
-                    output = null;
                 }
             }
         } else if (y >= (int) (hexagonSide * 6.0) && y < (int) (hexagonSide * 6.5)) {
             x -= widthMargin;
             x -= (int) (hexagonSide * sqrt3div2);
             int tag = x / (int) (hexagonSide * sqrt3div2);
-            if (tag < 0 || tag > 7) {
-                output = null;
-            } else {
+            if (tag >= 0 && tag <= 7) {
                 output = new EdgeLocation(tag / 2 + 2, 4, tag % 2);
             }
         } else if (y >= (int) (hexagonSide * 6.5) && y < (int) (hexagonSide * 7.5)) {
             x -= widthMargin;
             x -= (int) (hexagonSide * sqrt3div2);
             int tag = x / (2 * (int) (hexagonSide * sqrt3div2));
-            if (tag < 0 || tag > 3) {
-                output = null;
-            } else {
+            if (tag >= 0 && tag <= 3) {
                 if (x >= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) - roadSize &&
                         x <= (((tag * 2) + 1) * (int) (hexagonSide * sqrt3div2)) + roadSize) {
                     output = new EdgeLocation(tag + 2, 5, 2);
-                } else {
-                    output = null;
                 }
             }
-        } else if (y >= (int) (hexagonSide * 7.5) && y < (int) (hexagonSide * 8.0)) {
-            x -= widthMargin;
-            x -= 2 * (int) (hexagonSide * sqrt3div2);
-            int tag = x / (int) (hexagonSide * sqrt3div2);
-            if (tag < 0 || tag > 5) {
-                output = null;
-            } else {
-                output = new EdgeLocation(tag / 2 + 3, 5, tag % 2);
-            }
         } else {
-            output = null;
+            if (y >= (int) (hexagonSide * 7.5) && y < (int) (hexagonSide * 8.0)) {
+                x -= widthMargin;
+                x -= 2 * (int) (hexagonSide * sqrt3div2);
+                int tag = x / (int) (hexagonSide * sqrt3div2);
+                if (tag >= 0 && tag <= 5) {
+                    output = new EdgeLocation(tag / 2 + 3, 5, tag % 2);
+                }
+            }
         }
 
         return output;
@@ -1093,77 +1059,67 @@ public class CatanBoard extends JPanel {
 
             Point p = new Point(e.getX(), e.getY());
             if (state == 1) {
-                if (p != null) {
-                    Location loc = pxToTile(p);
+                Location loc = pxToTile(p);
 
-                    if (loc != null) {
-                        if (game.getBoard().moveRobber(loc)) {
-                            index--;
-                        }
-                        if (index == 0) {
-                            state = 0;
-                        }
+                if (loc != null) {
+                    if (game.getBoard().moveRobber(loc)) {
+                        index--;
+                    }
+                    if (index == 0) {
+                        state = 0;
                     }
                 }
             } else if (state == 2) {
-                if (p != null) {
-                    VertexLocation loc = pxToStructure(p);
-                    if (loc != null) {
-                        if (game.placeStructure(loc, GameRunner.getCurrentPlayer())) {
-                            game.buySettlement(GameRunner.getCurrentPlayer());
-                            index--;
-                        }
-                        if (index == 0) {
-                            state = 0;
-                        }
+                VertexLocation loc = pxToStructure(p);
+                if (loc != null) {
+                    if (game.placeStructure(loc, GameRunner.getCurrentPlayer())) {
+                        game.buySettlement(GameRunner.getCurrentPlayer());
+                        index--;
+                    }
+                    if (index == 0) {
+                        state = 0;
                     }
                 }
             } else if (state == 3) {
-                if (p != null) {
-                    EdgeLocation loc = pxToRoad(p);
-                    if (loc != null) {
-                        if (game.placeRoad(loc, GameRunner.getCurrentPlayer())) {
-                            game.buyRoad(GameRunner.getCurrentPlayer());
-                            index--;
-                        }
-                        if (index == 0) {
-                            state = 0;
-                        }
+                EdgeLocation loc = pxToRoad(p);
+                if (loc != null) {
+                    if (game.placeRoad(loc, GameRunner.getCurrentPlayer())) {
+                        game.buyRoad(GameRunner.getCurrentPlayer());
+                        index--;
+                    }
+                    if (index == 0) {
+                        state = 0;
                     }
                 }
             } else if (state == 4) {
-                if (p != null) {
-                    VertexLocation loc = pxToStructure(p);
-                    if (loc != null) {
-                        if (game.placeCity(loc, GameRunner.getCurrentPlayer())) {
-                            game.buyCity(GameRunner.getCurrentPlayer());
-                            index--;
-                        }
-                        if (index == 0) {
-                            state = 0;
-                        }
+                VertexLocation loc = pxToStructure(p);
+                if (loc != null) {
+                    if (game.placeCity(loc, GameRunner.getCurrentPlayer())) {
+                        game.buyCity(GameRunner.getCurrentPlayer());
+                        index--;
+                    }
+                    if (index == 0) {
+                        state = 0;
                     }
                 }
             } else if (state == 5) {
-                if (p != null) {
-                    VertexLocation loc = pxToStructure(p);
-                    if (loc != null) {
-                        if (game.getBoard().placeStructureNoRoad(loc, GameRunner.getCurrentPlayer())) {
-                            index--;
-                            if (capitol) {
-                                ArrayList<Tile> tiles = getGame().getBoard().getAdjacentTilesStructure(loc);
-                                for (Tile t : tiles) {
-                                    if (t != null) {
-                                        GameRunner.getCurrentPlayer().giveResourceType(t.getType());
-                                    }
+                VertexLocation loc = pxToStructure(p);
+                if (loc != null) {
+                    if (game.getBoard().placeStructureNoRoad(loc, GameRunner.getCurrentPlayer())) {
+                        index--;
+                        if (capitol) {
+                            ArrayList<Tile> tiles = getGame().getBoard().getAdjacentTilesStructure(loc);
+                            for (Tile t : tiles) {
+                                if (t != null) {
+                                    GameRunner.getCurrentPlayer().giveResourceType(t.getType());
                                 }
                             }
-                            //System.out.println(index);
                         }
-                        if (index == 0) {
-                            state = 0;
-                            //System.out.println("state to 0");
-                        }
+                        //System.out.println(index);
+                    }
+                    if (index == 0) {
+                        state = 0;
+                        //System.out.println("state to 0");
                     }
                 }
             }

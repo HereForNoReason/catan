@@ -485,6 +485,14 @@ public class Board {
 		return max;
 	}
 
+    /**
+     * Search for the length of the longest continuous path belonging to a single player.
+     * The path starts with an edge in a certain direction and will ignore edges already on the path it's considering.
+     * @param p Player the path must belong to
+     * @param start The edge to start at
+     * @param direction The vertex at which to look for the next edges to consider
+     * @return The length of the longest path from this point onwards
+     */
 	private int searchMaxPathLength(Player p, Road start, Structure direction) {
 		if (start.isVisited())
 			return 0;
