@@ -6,7 +6,7 @@ package board;
  */
 public class EdgeLocation extends Location {
 
-	private int orientation; // 0 = top left, 1 = top right, 2 = right
+	private final int orientation; // 0 = top left, 1 = top right, 2 = right
 	
 	
 	/**

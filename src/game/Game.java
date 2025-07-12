@@ -23,7 +23,7 @@ public class Game {
 		if (givenPlayers.size() < 3 || givenPlayers.size() > 4)
 			throw new IllegalArgumentException("Game must be played with three or four players");
 
-		ArrayList<String> names = new ArrayList<String>();
+		ArrayList<String> names = new ArrayList<>();
 		for (Player p : givenPlayers) {
 			names.add(p.getName());
 		}
@@ -48,7 +48,7 @@ public class Game {
 	}
 
 	/**
-	 * Returns the player that has won, or null if game is not finished
+	 * Returns the player that has won, or null if the game is not finished
 	 * @return winning player
 	 */
 	public Player winningPlayer() {
@@ -79,36 +79,13 @@ public class Game {
 		// RTD
 		int roll = (int)(Math.random() * 6 + 1) + (int)(Math.random() * 6 + 1);
 
-		if (roll == 7) {
-			return roll;
-		}
-		else {
-			// Distribute resources
-			board.distributeResources(roll);
+        if (roll != 7) {
+            // Distribute resources
+            board.distributeResources(roll);
 
-			return roll;
-		}
-	}
-
-	/**
-	 * Allows the given Player to move the Robber to the given Location
-	 * @param p the Player who moved the Robber
-	 * @return if the chosen Location is valid and the move succeeded
-	 */
-	public boolean moveRobber(Player p, Location loc) {
-
-		Location prev = board.getRobberLocation();
-
-		if (loc.equals(prev)) {
-			return false;
-		}
-
-		board.setRobberLocation(loc);
-		board.getTile(loc).setRobber(true);
-		board.getTile(prev).setRobber(false);
-
-		return true;
-	}
+        }
+        return roll;
+    }
 
 	/**
 	 * Allows the given Player to take a card from any Player with a Settlement on the Tile of the given Location
@@ -117,7 +94,7 @@ public class Game {
 	 */
 	public void takeCard(Player p, Player choice) {
 
-		ArrayList<String> res = new ArrayList<String>();
+		ArrayList<String> res = new ArrayList<>();
 		for (int i = 0; i < choice.getNumberResourcesType("BRICK"); i++) {
 			res.add("BRICK");
 		}
@@ -146,86 +123,9 @@ public class Game {
 		p.setNumberResourcesType(result, p.getNumberResourcesType(result) + 1);
 	}
 
-	/**
-	 * If any Player has more than seven cards, they choose half their cards (rounded down) to return to the bank
-	 */
-	public void halfCards() {
-
-		for (Player p : players) {
-
-			int cap = 7;
-			int numbCards = p.getNumberResourcesType("BRICK") +
-							p.getNumberResourcesType("WOOL") +
-							p.getNumberResourcesType("ORE") +
-							p.getNumberResourcesType("GRAIN") +
-							p.getNumberResourcesType("LUMBER");
-			int currentCards = numbCards;
-
-			boolean done = false;
-
-			do {
-				currentCards = p.getNumberResourcesType("BRICK") +
-							   p.getNumberResourcesType("WOOL") +
-							   p.getNumberResourcesType("ORE") +
-							   p.getNumberResourcesType("GRAIN") +
-							   p.getNumberResourcesType("LUMBER");
-
-				if (currentCards > cap) {
-					int input = 0; //TODO: input
-						/* Possible Values:
-						 * 0 - LUMBER
-						 * 1 - BRICK
-						 * 2 - WOOL
-						 * 3 - GRAIN
-						 * 4 - ORE
-						 */
-					cap = numbCards / 2;
-
-					switch (input) {
-					case 0:
-						p.setNumberResourcesType("LUMBER", p.getNumberResourcesType("LUMBER") - 1);
-						break;
-					case 1:
-						p.setNumberResourcesType("BRICK", p.getNumberResourcesType("BRICK") - 1);
-						break;
-					case 2:
-						p.setNumberResourcesType("WOOL", p.getNumberResourcesType("WOOL") - 1);
-						break;
-					case 3:
-						p.setNumberResourcesType("GRAIN", p.getNumberResourcesType("GRAIN") - 1);
-						break;
-					case 4:
-						p.setNumberResourcesType("ORE", p.getNumberResourcesType("ORE") - 1);
-						break;
-					}
-				}
-				else {
-					done = true;
-				}
-			} while (!done);
-		}
-	}
-	
-	/**
-	 * Causes the given player to take all the specified resource from all other players (for monopoly cards)
-	 * @param res the resource to take
-	 * @param p the player receiving all of that res
-	 */
-	public void takeAll(String res, Player p) {
-		
-		ArrayList<Player> plays = new ArrayList<Player>(players);
-		plays.remove(p);
-		
-		for (Player player : plays) {
-			int tmp = player.getNumberResourcesType(res);
-			
-			player.setNumberResourcesType(res, 0);
-			p.setNumberResourcesType(res, p.getNumberResourcesType(res) + tmp);
-		}
-	}
 
 	/**
-	 * Operates trade between two players with the given resoures
+	 * Operates trade between two players with the given resources
 	 * @param a the first Player in the trading
 	 * @param b the second Player in the trading
 	 * @param fromA the resources being traded from Player a to Player b
@@ -265,7 +165,7 @@ public class Game {
 
 		//TODO: check if this npc trade is valid (valid ratios, harbors, etc)
 		boolean[] ports = a.getPorts();
-		ArrayList<Integer> resources = new ArrayList<Integer>();
+		ArrayList<Integer> resources = new ArrayList<>();
 		resources.add(Collections.frequency(fromA,"BRICK"));
 		resources.add(Collections.frequency(fromA,"WOOL"));
 		resources.add(Collections.frequency(fromA,"ORE"));
@@ -282,7 +182,7 @@ public class Game {
 		//int toGrain = Collections.frequency(toA,"GRAIN");
 		//int nLumber = Collections.frequency(fromA,"LUMBER");
 		//int toLumber = Collections.frequency(toA,"LUMBER");
-		ArrayList<String> toA = new ArrayList<String>();
+		ArrayList<String> toA = new ArrayList<>();
 
 		for (int i = 0; i < resources.size(); i++) {
 			if (resources.get(i) == 0) {}
@@ -344,7 +244,7 @@ public class Game {
 			return 1;
 		}
 
-		// Check Player has not exceeded capacity for object
+		// Check Player has not exceeded capacity for an object
 		if (p.getNumbRoads() >= 15) {
 			return 2;
 		}
@@ -375,7 +275,7 @@ public class Game {
 			return 1;
 		}
 
-		// Check Player has not exceeded capacity for object
+		// Check Player has not exceeded capacity for an object
 		if (p.getNumbSettlements() >= 5) {
 			return 2;
 		}
@@ -408,7 +308,7 @@ public class Game {
 			return 1;
 		}
 
-		// Check Player has not exceeded capacity for object
+		// Check Player has not exceeded capacity for an object
 		if (p.getNumbCities() >= 4) {
 			return 2;
 		}

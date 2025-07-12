@@ -19,7 +19,6 @@ public class Player {
 	private int victoryPoints = 2;
 	private int numbRoads = 2;
 	private int numbCities = 0;
-	private boolean hasLargestArmy;
 	private boolean[] ports = {false, false, false, false, false, false};
 					// 0 = general
 					// 1 = brick
@@ -32,14 +31,13 @@ public class Player {
 	/**
 	 * Constructor takes params for assignment to fields
 	 * @param n is the Player's name
-	 * @param c is the Player's color in game
+	 * @param c Color of the player
 	 */
 	public Player(String n, Color c) {
 
 		name = n;
 		color = c;
 		roads = new ArrayList<Road>();
-
 		resources = new HashMap<String, Integer>(5);
 		resources.put("BRICK", 0);
 		resources.put("WOOL", 0);
@@ -51,14 +49,14 @@ public class Player {
 
 	/**
 	 * Dev testing constructor to make player w/ predefined fields
-	 * @param n
-	 * @param c
-	 * @param brick
-	 * @param wool
-	 * @param ore
-	 * @param grain
-	 * @param lumber
-	 * @param vP
+	 * @param n is the player name
+	 * @param c is the given color
+	 * @param brick amount of this resource
+	 * @param wool amount of this resource
+	 * @param ore amount of this resource
+	 * @param grain amount of this resource
+	 * @param lumber amount of this resource
+	 * @param vP number of victory points
 	 */
 	public Player(String n, Color c, int brick, int wool, int ore, int grain, int lumber, int vP) {
 
@@ -90,7 +88,7 @@ public class Player {
 	}
 
 	/**
-	 * Getter for the number of victory points of this Player
+	 * Getter for the number of victory points from this Player
 	 * @return number of victory points
 	 */
 	public int getVictoryPoints() {
@@ -98,7 +96,7 @@ public class Player {
 	}
 
 	/**
-	 * Setter for the number of victory points of this Player
+	 * Setter for the number of victory points from this Player
 	 * @param vP new number of victory points
 	 */
 	public void setVictoryPoints(int vP) {
@@ -106,7 +104,7 @@ public class Player {
 	}
 
 	/**
-	 * Getter for this Player's quantity of given resource type
+	 * Getter for this Player's quantity of this given resource type
 	 * @param str resource to work with
 	 * @return number of resources str owned by this Player
 	 */
@@ -117,7 +115,7 @@ public class Player {
 	}
 
 	/**
-	 * Setter for this Player's quantity of given resource type
+	 * Setter for this Player's quantity of this given resource type
 	 * @param str resource to work with
 	 * @param n new number of resources of type str
 	 */
@@ -126,16 +124,8 @@ public class Player {
 	}
 
 
-//	/**
-//	 * Getter for this Player's hand of DevCards
-//	 * @return an ArrayList of DevCards owned by this Player
-//	 */
-//	public ArrayList<DevCard> getHand() {
-//		return hand;
-//	}
-
 	/**
-	 * Adds given road to list of owned roads
+	 * Adds the given road to the list of owned roads
 	 * @param r road added
 	 */
 	public void addRoad(Road r){
@@ -223,7 +213,7 @@ public class Player {
 	}
 
 	/**
-	 * Getter for list of ports
+	 * Getter for the list of ports
 	 * @return ports list of ports
 	 */
 	public boolean[] getPorts() {
@@ -289,7 +279,7 @@ public class Player {
 	 * @param str the resource type to increment
 	 */
 	public void giveResourceType(String str) {
-		if (str == null || str == "DESERT") {
+		if (str == null || str.equals("DESERT")) {
 			return;
 		}
 		resources.put(str, resources.get(str) + 1);
@@ -305,20 +295,10 @@ public class Player {
 			setNumberResourcesType(s, getNumberResourcesType(s) - 1);
 		}
 	}
+
 	
 	/**
-	 * Adds all resources in given list to this player
-	 * @param rez list of resources to be added
-	 */
-	public void addResources(ArrayList<String> rez) {
-		for (String s: rez) {
-			//System.out.println("Removed " + s);
-			setNumberResourcesType(s, getNumberResourcesType(s) + 1);
-		}
-	}
-	
-	/**
-	 * Gets total amount of resources this player has
+	 * Gets the total amount of resources this player has
 	 * @return int total resources
 	 */
 	public int getTotalResources() {

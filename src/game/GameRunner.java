@@ -13,7 +13,7 @@ public class GameRunner {
 	private static Player currentPlayer;
 	private static int numberPlayers;
 	private static int index = 0;
-	private static ArrayList<Player> players = new ArrayList<Player>();
+	private static ArrayList<Player> players = new ArrayList<>();
 	private static Game game;
 	private static Player winner;
 	private static PlayerSelectionApp select;
@@ -26,14 +26,14 @@ public class GameRunner {
 	}
 
 	private static String getPlayerName(int id) {
-		String playername = "";
-		String finalPlayername = playername;
-		while (playername.isEmpty() || players.stream().anyMatch(p -> p.getName().equals(finalPlayername))) {
-			playername	= JOptionPane.showInputDialog("Player " + id + ", please enter your name");
-			if (playername == null) // Cancel
+		String playerName = "";
+		String finalPlayerName = playerName;
+		while (playerName.isEmpty() || players.stream().anyMatch(p -> p.getName().equals(finalPlayerName))) {
+			playerName	= JOptionPane.showInputDialog("Player " + id + ", please enter your name");
+			if (playerName == null) // Cancel
 				System.exit(0);
 		}
-		return playername;
+		return playerName;
 	}
 
 	public static void start() {

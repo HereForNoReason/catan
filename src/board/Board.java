@@ -8,7 +8,7 @@ import java.util.Stack;
 
 
 /**
- * Board represents the board in Settlers of Catan, and contains the grids for tiles, structures, and roads.
+ * This Board represents the board in Settlers of Catan, and contains the grids for tiles, structures, and roads.
  */
 public class Board {
 
@@ -18,7 +18,7 @@ public class Board {
 	private Location robberLoc;
 		// Board is slanted backwards, i.e.  \##\
 	private Road endpoint = null; // For DPS
-	private VertexLocation startside;
+	private VertexLocation startpoint;
 
 
 	/**
@@ -33,7 +33,7 @@ public class Board {
 		roads = new Road[7][7][3];
 		Tile desert = new Tile("DESERT", true);
 
-		// Create the ArrayList of all the tiles to be put in the board, with resource type defined
+		// Create the ArrayList of all the tiles to be put in the board, with the type of resource defined
 		ArrayList<Tile> tileList = new ArrayList<>();
 		tileList.add(new Tile("LUMBER")); tileList.add(new Tile("LUMBER")); tileList.add(new Tile("LUMBER")); tileList.add(new Tile("LUMBER"));
 		tileList.add(new Tile("BRICK")); tileList.add(new Tile("BRICK")); tileList.add(new Tile("BRICK"));
@@ -276,12 +276,12 @@ public class Board {
 				return false;
 			}
 		}
-		//structures[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
+		//structures[loc.getXCoordination()][loc.getYCoordination()][loc.getOrientation()].setOwner(player);
 	}
 
 	/**
-	 * Checks location for validity for given player, the assigns the road to the given player
-	 * @param loc Location of road
+	 * Checks location for validity for given player, assigns the road to the given player
+	 * @param loc Location of the road
 	 * @param player Player placing the road
 	 * @return boolean true if successful
 	 */
@@ -337,12 +337,12 @@ public class Board {
 				return false;
 			}
 		}
-		//roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()].setOwner(player);
+		//roads[loc.getXCoordination()][loc.getYCoordination()][loc.getOrientation()].setOwner(player);
 	}
 
 	/**
 	 * Checks location for validity for given player, then upgrades settlement into city
-	 * @param loc Location of road
+	 * @param loc Location of the road
 	 * @param player Player placing the road
 	 * @return boolean true if successful
 	 */
@@ -374,7 +374,7 @@ public class Board {
 	/**
 	 * Checks location for validity, then moves the robber to that location
 	 * @param loc location to move to
-	 * @return Location the robber moved to
+	 * @return the location the robber moved to
 	 */
 	
 	public boolean moveRobber(Location loc) {
@@ -459,9 +459,9 @@ public class Board {
 	}
 
 	/**
-	 * Finds the length of the longest chain of roads of the given player
+	 * Finds the length of given players longest road
 	 * @param p player's roads to be analyzed
-	 * @return int length of the longest chain of roads
+	 * @return int length of players longest road
 	 */
 	public int findLongestRoad(Player p) { //TODO fix this
 		ArrayList<Road> roadList = new ArrayList<>(p.getRoads());
@@ -485,22 +485,22 @@ public class Board {
 			if (endpoint == null) {
 				endpoint = connectedRoads.get(0);
 				if (endpoint.getLocation().getOrientation() == 0 || endpoint.getLocation().getOrientation() == 1) {
-					startside = structures[endpoint.getLocation().getXCoord()][endpoint.getLocation().getYCoord()][0].getLocation();
+					startpoint = structures[endpoint.getLocation().getXCoord()][endpoint.getLocation().getYCoord()][0].getLocation();
 				}
 				else {
-					startside = structures[endpoint.getLocation().getXCoord() + 1][endpoint.getLocation().getYCoord() + 1][1].getLocation();
+					startpoint = structures[endpoint.getLocation().getXCoord() + 1][endpoint.getLocation().getYCoord() + 1][1].getLocation();
 				}
 			}
 
 			Stack<Road> s = new Stack<>();
-			Stack<VertexLocation> entrysides = new Stack<>();
+			Stack<VertexLocation> entrySides = new Stack<>();
 			s.push(endpoint);
 
-			entrysides.push(startside);
+			entrySides.push(startpoint);
 			int count = 1;
 			while (!s.empty()) {
 				s.peek().visit();
-				ArrayList<Road> children = findAdjacentRoadsDFS(s.peek(),entrysides.peek());
+				ArrayList<Road> children = findAdjacentRoadsDFS(s.peek(),entrySides.peek());
 				for (int i = 0; i < children.size(); i++) {
 					if (children.get(i).isVisited()) {
 						children.remove(i);
@@ -509,14 +509,14 @@ public class Board {
 				}
 				if (children.isEmpty()) {
 					s.pop();
-					entrysides.pop();
+					entrySides.pop();
 					if (count >= maxCount)
 						maxCount = count;
 					count--;
 				}
 				else {
 					count++;
-					entrysides.push(roadConnectsToOther(s.peek(),children.get(0)));
+					entrySides.push(roadConnectsToOther(s.peek(),children.get(0)));
 					s.push(children.get(0));
 				}
 			}
@@ -527,14 +527,14 @@ public class Board {
 		}
 
 		endpoint = null; //Reset endpoint
-		startside = null;
+		startpoint = null;
 		return maxCount;
 	}
 
 	/**
 	 * Finds all adjacent and connected roads by longest road standards to the given location
 	 * Prerequisite: Given location has a road that has an owner.
-	 * @param loc location of road
+	 * @param loc location of the road
 	 * @return ArrayList<Road> of connected roads
 	 */
 	private ArrayList<Road> findAdjacentRoads(EdgeLocation loc) {
@@ -548,7 +548,7 @@ public class Board {
 		if (o == 0) {
 			if (p.equals(structures[x][y + 1][1].getOwner()) || structures[x][y + 1][1].getOwner() == null) {
 				if (!p.equals(roads[x - 1][y][1].getOwner()) && !p.equals(roads[x - 1][y][2].getOwner())) {
-					startside = structures[x][y + 1][1].getLocation();
+					startpoint = structures[x][y + 1][1].getLocation();
 					endpoint = r;
 				}
 				else {
@@ -562,7 +562,7 @@ public class Board {
 			}
 			if (p.equals(structures[x][y][0].getOwner()) || structures[x][y][0].getOwner() == null) {
 				if (!p.equals(roads[x][y + 1][2].getOwner()) && !p.equals(roads[x][y][1].getOwner())) {
-					startside = structures[x][y][0].getLocation();
+					startpoint = structures[x][y][0].getLocation();
 					endpoint = r;
 				}
 				else {
@@ -578,7 +578,7 @@ public class Board {
 		else if (o == 1) {
 			if (p.equals(structures[x + 1][y + 1][1].getOwner()) || structures[x + 1][y + 1][1].getOwner() == null) {
 				if (!p.equals(roads[x + 1][y][0].getOwner()) && !p.equals(roads[x][y][2].getOwner())) {
-					startside = structures[x + 1][y + 1][1].getLocation();
+					startpoint = structures[x + 1][y + 1][1].getLocation();
 					endpoint = r;
 				}
 				else {
@@ -592,7 +592,7 @@ public class Board {
 			}
 			if (p.equals(structures[x][y][0].getOwner()) || structures[x][y][0].getOwner() == null) {
 				if (!p.equals(roads[x][y + 1][2].getOwner()) && !p.equals(roads[x][y][0].getOwner())) {
-					startside = structures[x][y][0].getLocation();
+					startpoint = structures[x][y][0].getLocation();
 					endpoint = r;
 				}
 				else {
@@ -608,7 +608,7 @@ public class Board {
 		else {
 			if (p.equals(structures[x + 1][y + 1][1].getOwner()) || structures[x + 1][y + 1][1].getOwner() == null) {
 				if (!p.equals(roads[x + 1][y][0].getOwner()) && !p.equals(roads[x][y][1].getOwner())) {
-					startside = structures[x + 1][y + 1][1].getLocation();
+					startpoint = structures[x + 1][y + 1][1].getLocation();
 					endpoint = r;
 				}
 				else {
@@ -622,7 +622,7 @@ public class Board {
 			}
 			if (p.equals(structures[x][y - 1][0].getOwner()) || structures[x][y - 1][0].getOwner() == null) {
 				if (!p.equals(roads[x][y - 1][1].getOwner()) && !p.equals(roads[x][y - 1][0].getOwner())) {
-					startside = structures[x][y - 1][0].getLocation();
+					startpoint = structures[x][y - 1][0].getLocation();
 					endpoint = r;
 				}
 				else {
@@ -642,19 +642,19 @@ public class Board {
 	/**
 	 * Finds all adjacent and connected roads by longest road standards to the given location on the opposite side of the entry side
 	 * Prerequisite: Given location has a road that has an owner.
-	 * @param r location of road
+	 * @param r location of the road
 	 * @return ArrayList<Road> of connected roads
 	 */
-	private ArrayList<Road> findAdjacentRoadsDFS(Road r, VertexLocation entryside) {
+	private ArrayList<Road> findAdjacentRoadsDFS(Road r, VertexLocation entrySide) {
 		ArrayList<Road> check = new ArrayList<>();
-		Structure s = structures[entryside.getXCoord()][entryside.getYCoord()][entryside.getOrientation()];
+		Structure s = structures[entrySide.getXCoord()][entrySide.getYCoord()][entrySide.getOrientation()];
 		Player p = r.getOwner();
 		int x = r.getLocation().getXCoord();
 		int y = r.getLocation().getYCoord();
 		int o = r.getLocation().getOrientation();
 
 		if (o == 0) {
-			if (entryside.getOrientation() == 0 && (p.equals(s.getOwner()) || s.getOwner() == null)) {
+			if (entrySide.getOrientation() == 0 && (p.equals(s.getOwner()) || s.getOwner() == null)) {
 				check.add(roads[x - 1][y][2]);
 				check.add(roads[x - 1][y][1]);
 			}
@@ -664,7 +664,7 @@ public class Board {
 			}
 		}
 		else if (o == 1) {
-			if (entryside.getOrientation() == 0 && (p.equals(s.getOwner()) || s.getOwner() == null)) {
+			if (entrySide.getOrientation() == 0 && (p.equals(s.getOwner()) || s.getOwner() == null)) {
 				check.add(roads[x][y][2]);
 				check.add(roads[x + 1][y][0]);
 			}
@@ -674,7 +674,7 @@ public class Board {
 			}
 		}
 		else if (o == 2) {
-			if (entryside.getOrientation() == 0 && (p.equals(s.getOwner()) || s.getOwner() == null)) {
+			if (entrySide.getOrientation() == 0 && (p.equals(s.getOwner()) || s.getOwner() == null)) {
 				check.add(roads[x + 1][y][0]);
 				check.add(roads[x][y][1]);
 			}
@@ -696,7 +696,7 @@ public class Board {
 	 /**
 	 * Find the settlement between two connected roads
 	 * Prerequisite: two roads are connected
-	 * @param r orginal road
+	 * @param r original road
 	 * @param other checked road
 	 * @return VertexLocation in between
 	 */
@@ -825,7 +825,7 @@ public class Board {
 	}
 	
 	/**
-	 * Getter for structures array
+	 * Getter for this structure array
 	 * @return structures array
 	 */
 	public Structure[][][] getStructures(){

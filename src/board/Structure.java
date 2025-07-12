@@ -33,7 +33,7 @@ public class Structure {
 
 	/**
 	 * Setter for the Structure's owner
-	 * Can only be set if Structure is unowned (only settable once)
+	 * Can only be set if the Structure is unowned (only settable once)
 	 * @param p the new owner of the Structure
 	 */
 	public void setOwner(Player p) {
@@ -66,7 +66,7 @@ public class Structure {
 	}
 	
 	/**
-	 * Getter for the Structure'ss type
+	 * Getter for the Structure's type
 	 * @return the Structure's type
 	 */
 	public int getType() {
