@@ -4,7 +4,6 @@ import game.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Stack;
 
 
 /**
@@ -16,9 +15,6 @@ public class Board {
     private final Structure[][][] structures;
     private final Road[][][] roads;
     private Location robberLoc;
-    // Board is slanted backwards, i.e.  \##\
-    private Road endpoint = null; // For DPS
-    private VertexLocation startpoint;
 
 
     /**
@@ -453,295 +449,112 @@ public class Board {
         return output;
     }
 
-    /**
-     * Finds the length of given players longest road
-     *
-     * @param p player's roads to be analyzed
-     * @return int length of players longest road
-     */
-    public int findLongestRoad(Player p) { //TODO fix this
-        ArrayList<Road> roadList = new ArrayList<>(p.getRoads());
-        int maxCount = 1;
+	/**
+	 * Finds the length of the longest chain of roads of the given player
+	 * @param p player's roads to be analyzed
+	 * @return length of the longest chain of roads
+	 */
+	public int findLongestRoad(Player p) {
+		int max = 0;
 
-        while (!roadList.isEmpty()) {
-            ArrayList<Road> connectedRoads = new ArrayList<>();
-            connectedRoads.add(roadList.remove(0));
+		for (Road road : p.getRoads()) {
+			EdgeLocation loc = road.getLocation();
 
-            for (int i = 0; i < connectedRoads.size(); i++) {
-                ArrayList<Road> adjacentRoads = findAdjacentRoads(connectedRoads.get(i).getLocation());
+			int x = loc.getXCoord();
+			int y = loc.getYCoord();
+			int o = loc.getOrientation();
 
-                for (Road adjacentRoad : adjacentRoads) {
-                    int index = roadList.indexOf(adjacentRoad);
-                    if (index >= 0) {
-                        connectedRoads.add(roadList.remove(index));
-                    }
-                }
-            }
+			if (o == 0) {
+				max = Math.max(max, Math.max(
+						searchMaxPathLength(p, road, structures[x][y+1][1]),
+						searchMaxPathLength(p, road, structures[x][y][0])
+				));
+			} else if (o == 1) {
+				max = Math.max(max, Math.max(
+						searchMaxPathLength(p, road, structures[x+1][y+1][1]),
+						searchMaxPathLength(p, road, structures[x][y][0])
+				));
+			} else {
+				max = Math.max(max, Math.max(
+						searchMaxPathLength(p, road, structures[x+1][y+1][1]),
+						searchMaxPathLength(p, road, structures[x][y-1][0])
+				));
+			}
+		}
 
-            if (endpoint == null) {
-                endpoint = connectedRoads.get(0);
-                if (endpoint.getLocation().getOrientation() == 0 || endpoint.getLocation().getOrientation() == 1) {
-                    startpoint = structures[endpoint.getLocation().getXCoord()][endpoint.getLocation().getYCoord()][0].getLocation();
-                } else {
-                    startpoint = structures[endpoint.getLocation().getXCoord() + 1][endpoint.getLocation().getYCoord() + 1][1].getLocation();
-                }
-            }
+		return max;
+	}
 
-            Stack<Road> s = new Stack<>();
-            Stack<VertexLocation> entrySides = new Stack<>();
-            s.push(endpoint);
+	private int searchMaxPathLength(Player p, Road start, Structure direction) {
+		if (start.isVisited())
+			return 0;
 
-            entrySides.push(startpoint);
-            int count = 1;
-            while (!s.empty()) {
-                s.peek().visit();
-                ArrayList<Road> children = findAdjacentRoadsDFS(s.peek(), entrySides.peek());
-                for (int i = 0; i < children.size(); i++) {
-                    if (children.get(i).isVisited()) {
-                        children.remove(i);
-                        i--;
-                    }
-                }
-                if (children.isEmpty()) {
-                    s.pop();
-                    entrySides.pop();
-                    if (count >= maxCount)
-                        maxCount = count;
-                    count--;
-                } else {
-                    count++;
-                    entrySides.push(roadConnectsToOther(s.peek(), children.get(0)));
-                    s.push(children.get(0));
-                }
-            }
+		if (direction.getOwner() != null && !p.equals(direction.getOwner()))
+			return 1;
 
-            for (Road connectedRoad : connectedRoads) {  //Reset boolean visited
-                connectedRoad.resetVisited();
-            }
-        }
+		start.visit();
 
-        endpoint = null; //Reset endpoint
-        startpoint = null;
-        return maxCount;
-    }
+		EdgeLocation loc = start.getLocation();
 
-    /**
-     * Finds all adjacent and connected roads by longest road standards to the given location
-     * Prerequisite: Given location has a road that has an owner.
-     *
-     * @param loc location of the road
-     * @return ArrayList<Road> of connected roads
-     */
-    private ArrayList<Road> findAdjacentRoads(EdgeLocation loc) {
-        Road r = roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()];
-        ArrayList<Road> output = new ArrayList<>();
-        Player p = r.getOwner();
         int x = loc.getXCoord();
-        int y = loc.getYCoord();
-        int o = loc.getOrientation();
+		int y = loc.getYCoord();
+		int o = loc.getOrientation();
+		int o2 = direction.getLocation().getOrientation();
 
-        if (o == 0) {
-            if (p.equals(structures[x][y + 1][1].getOwner()) || structures[x][y + 1][1].getOwner() == null) {
-                if (!p.equals(roads[x - 1][y][1].getOwner()) && !p.equals(roads[x - 1][y][2].getOwner())) {
-                    startpoint = structures[x][y + 1][1].getLocation();
-                    endpoint = r;
-                } else {
-                    if (p.equals(roads[x - 1][y][1].getOwner())) {
-                        output.add(roads[x - 1][y][1]);
-                    }
-                    if (p.equals(roads[x - 1][y][2].getOwner())) {
-                        output.add(roads[x - 1][y][2]);
-                    }
-                }
-            }
-            if (p.equals(structures[x][y][0].getOwner()) || structures[x][y][0].getOwner() == null) {
-                if (!p.equals(roads[x][y + 1][2].getOwner()) && !p.equals(roads[x][y][1].getOwner())) {
-                    startpoint = structures[x][y][0].getLocation();
-                    endpoint = r;
-                } else {
-                    if (p.equals(roads[x][y + 1][2].getOwner())) {
-                        output.add(roads[x][y + 1][2]);
-                    }
-                    if (p.equals(roads[x][y][1].getOwner())) {
-                        output.add(roads[x][y][1]);
-                    }
-                }
-            }
-        } else if (o == 1) {
-            if (p.equals(structures[x + 1][y + 1][1].getOwner()) || structures[x + 1][y + 1][1].getOwner() == null) {
-                if (!p.equals(roads[x + 1][y][0].getOwner()) && !p.equals(roads[x][y][2].getOwner())) {
-                    startpoint = structures[x + 1][y + 1][1].getLocation();
-                    endpoint = r;
-                } else {
-                    if (p.equals(roads[x + 1][y][0].getOwner())) {
-                        output.add(roads[x + 1][y][0]);
-                    }
-                    if (p.equals(roads[x][y][2].getOwner())) {
-                        output.add(roads[x][y][2]);
-                    }
-                }
-            }
-            if (p.equals(structures[x][y][0].getOwner()) || structures[x][y][0].getOwner() == null) {
-                if (!p.equals(roads[x][y + 1][2].getOwner()) && !p.equals(roads[x][y][0].getOwner())) {
-                    startpoint = structures[x][y][0].getLocation();
-                    endpoint = r;
-                } else {
-                    if (p.equals(roads[x][y + 1][2].getOwner())) {
-                        output.add(roads[x][y + 1][2]);
-                    }
-                    if (p.equals(roads[x][y][0].getOwner())) {
-                        output.add(roads[x][y][0]);
-                    }
-                }
-            }
-        } else {
-            if (p.equals(structures[x + 1][y + 1][1].getOwner()) || structures[x + 1][y + 1][1].getOwner() == null) {
-                if (!p.equals(roads[x + 1][y][0].getOwner()) && !p.equals(roads[x][y][1].getOwner())) {
-                    startpoint = structures[x + 1][y + 1][1].getLocation();
-                    endpoint = r;
-                } else {
-                    if (p.equals(roads[x + 1][y][0].getOwner())) {
-                        output.add(roads[x + 1][y][0]);
-                    }
-                    if (p.equals(roads[x][y][1].getOwner())) {
-                        output.add(roads[x][y][1]);
-                    }
-                }
-            }
-            if (p.equals(structures[x][y - 1][0].getOwner()) || structures[x][y - 1][0].getOwner() == null) {
-                if (!p.equals(roads[x][y - 1][1].getOwner()) && !p.equals(roads[x][y - 1][0].getOwner())) {
-                    startpoint = structures[x][y - 1][0].getLocation();
-                    endpoint = r;
-                } else {
-                    if (p.equals(roads[x][y - 1][1].getOwner())) {
-                        output.add(roads[x][y - 1][1]);
-                    }
-                    if (p.equals(roads[x][y - 1][0].getOwner())) {
-                        output.add(roads[x][y - 1][0]);
-                    }
-                }
-            }
-        }
+		int max = 0;
 
-        return output;
-    }
+		if (o == 0) {
+			if (o2 == 0) {
+				if (x < 6 && y < 5 && p.equals(roads[x][y+1][2].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x][y+1][2], structures[x+1][y+2][1]));
 
-    /**
-     * Finds all adjacent and connected roads by longest road standards to the given location on the opposite side of the entry side
-     * Prerequisite: Given location has a road that has an owner.
-     *
-     * @param r location of the road
-     * @return ArrayList<Road> of connected roads
-     */
-    private ArrayList<Road> findAdjacentRoadsDFS(Road r, VertexLocation entrySide) {
-        ArrayList<Road> check = new ArrayList<>();
-        Structure s = structures[entrySide.getXCoord()][entrySide.getYCoord()][entrySide.getOrientation()];
-        Player p = r.getOwner();
-        int x = r.getLocation().getXCoord();
-        int y = r.getLocation().getYCoord();
-        int o = r.getLocation().getOrientation();
+				if (x < 6 && y < 6 && p.equals(roads[x][y][1].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x][y][1], structures[x+1][y+1][1]));
+			} else {
+				if (x > 0 && p.equals(roads[x-1][y][1].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x-1][y][1], structures[x-1][y][0]));
 
-        if (o == 0) {
-            if (entrySide.getOrientation() == 0 && (p.equals(s.getOwner()) || s.getOwner() == null)) {
-                check.add(roads[x - 1][y][2]);
-                check.add(roads[x - 1][y][1]);
-            } else if (p.equals(s.getOwner()) || s.getOwner() == null) {
-                check.add(roads[x][y][1]);
-                check.add(roads[x][y + 1][2]);
-            }
-        } else if (o == 1) {
-            if (entrySide.getOrientation() == 0 && (p.equals(s.getOwner()) || s.getOwner() == null)) {
-                check.add(roads[x][y][2]);
-                check.add(roads[x + 1][y][0]);
-            } else if (p.equals(s.getOwner()) || s.getOwner() == null) {
-                check.add(roads[x][y][0]);
-                check.add(roads[x][y + 1][2]);
-            }
-        } else if (o == 2) {
-            if (entrySide.getOrientation() == 0 && (p.equals(s.getOwner()) || s.getOwner() == null)) {
-                check.add(roads[x + 1][y][0]);
-                check.add(roads[x][y][1]);
-            } else if (p.equals(s.getOwner()) || s.getOwner() == null) {
-                check.add(roads[x][y - 1][1]);
-                check.add(roads[x][y - 1][0]);
-            }
-        }
+				if (x > 0 && y > 0 && p.equals(roads[x-1][y][2].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x-1][y][2], structures[x-1][y-1][0]));
+			}
+		} else if (o == 1) {
+			if (o2 == 0) {
+				if (x < 6 && y < 5 && p.equals(roads[x][y+1][2].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x][y+1][2], structures[x+1][y+2][1]));
 
-        for (int i = 0; i < check.size(); i++) {
-            if (!p.equals(check.get(i).getOwner())) {
-                check.remove(i);
-                i--;
-            }
-        }
-        return check;
-    }
+				if (y < 6 && p.equals(roads[x][y][0].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x][y][0], structures[x][y+1][1]));
+			} else {
+				if (x < 6 && p.equals(roads[x+1][y][0].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x+1][y][0], structures[x+1][y][0]));
 
-    /**
-     * Find the settlement between two connected roads
-     * Prerequisite: two roads are connected
-     *
-     * @param r     original road
-     * @param other checked road
-     * @return VertexLocation in between
-     */
-    private VertexLocation roadConnectsToOther(Road r, Road other) {
-        int ro = r.getLocation().getOrientation();
-        int rx = r.getLocation().getXCoord();
-        int ry = r.getLocation().getYCoord();
-        int oo = other.getLocation().getOrientation();
-        int ox = other.getLocation().getXCoord();
-        int oy = other.getLocation().getYCoord();
+				if (y > 0 && p.equals(roads[x][y][2].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x][y][2], structures[x][y-1][0]));
+			}
+		} else {
+			if (o2 == 0) {
+				if (x < 6 && y > 0 && p.equals(roads[x][y-1][1].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x][y-1][1], structures[x+1][y][1]));
 
-        if (ro == 0) {
-            if (oo == 1) {
-                if (rx == ox) {
-                    return structures[rx][ry][0].getLocation();
-                } else {
-                    return structures[rx][ry + 1][1].getLocation();
-                }
-            } else {
-                if (ry + 1 == oy) {
-                    return structures[rx][ry][0].getLocation();
-                } else {
-                    return structures[rx][ry + 1][1].getLocation();
-                }
-            }
-        } else if (ro == 1) {
-            if (oo == 0) {
-                if (rx == ox) {
-                    return structures[rx][ry][0].getLocation();
-                } else {
-                    return structures[rx + 1][ry + 1][1].getLocation();
-                }
-            } else {
-                if (ry + 1 == oy) {
-                    return structures[rx][ry][0].getLocation();
-                } else {
-                    return structures[rx - 1][ry][1].getLocation();
-                }
-            }
-        } else {
-            if (oo == 0) {
-                if (rx == ox) {
-                    return structures[rx][ry - 1][0].getLocation();
-                } else {
-                    return structures[rx + 1][ry + 1][1].getLocation();
-                }
-            } else {
-                if (ry == oy) {
-                    return structures[rx + 1][ry + 1][1].getLocation();
-                } else {
-                    return structures[rx][ry - 1][0].getLocation();
-                }
-            }
-        }
+				if (y > 0 && p.equals(roads[x][y-1][0].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x][y-1][0], structures[x][y][1]));
+			} else {
+				if (x < 6 && p.equals(roads[x+1][y][0].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x+1][y][0], structures[x+1][y][0]));
 
-    }
+				if (p.equals(roads[x][y][1].getOwner()))
+					max = Math.max(max, searchMaxPathLength(p, roads[x][y][1], structures[x][y][0]));
+			}
+		}
 
-    /**
-     * Checks if given VertexLocation is a port, and returns the portTag is it is.
-     *
-     * @param loc the location to check at
+		start.resetVisited();
+
+		return max + 1;
+	}
+
+	/**
+	 * Checks if given VertexLocation is a port, and returns the portTag is it is.
+	 ** @param loc the location to check at
      * @return int portTag if port, -1 if not
      * 0 = general
      * 1 = brick

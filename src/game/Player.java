@@ -17,7 +17,7 @@ public class Player {
     private final ArrayList<Road> roads;
     private int numbSettlements = 2;
     private int victoryPoints = 2;
-    private int numbRoads = 2;
+    private int numbRoads = 0;
     private int numbCities = 0;
     private final boolean[] ports = {false, false, false, false, false, false};
     // 0 = general
@@ -118,7 +118,7 @@ public class Player {
     public int getNumberResourcesType(String str) {
         if (str == null || str.equals("DESERT"))
             return 0;
-        return resources.get(str).intValue();
+        return resources.get(str);
     }
 
     /**
@@ -128,7 +128,7 @@ public class Player {
      * @param n   new number of resources of type str
      */
     public void setNumberResourcesType(String str, int n) {
-        resources.put(str, Integer.valueOf(n));
+        resources.put(str, n);
     }
 
 
@@ -164,17 +164,24 @@ public class Player {
                 brick = 0,
                 grain = 0;
 
-        for (String ignored : res) {
-            if (res.equals("WOOL"))
-                wool++;
-            else if (res.equals("ORE"))
-                ore++;
-            else if (res.equals("LUMBER"))
-                lumber++;
-            else if (res.equals("BRICK"))
-                brick++;
-            else if (res.equals("GRAIN"))
-                grain++;
+        for (String r : res) {
+            switch (r) {
+                case "WOOL":
+                    wool++;
+                    break;
+                case "ORE":
+                    ore++;
+                    break;
+                case "LUMBER":
+                    lumber++;
+                    break;
+                case "BRICK":
+                    brick++;
+                    break;
+                case "GRAIN":
+                    grain++;
+                    break;
+            }
         }
 
         return wool <= resources.get("WOOL") && ore <= resources.get("ORE") && lumber <= resources.get("LUMBER") && brick <= resources.get("BRICK") && grain <= resources.get("GRAIN");
