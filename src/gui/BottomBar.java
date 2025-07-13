@@ -8,11 +8,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * The Bar at the bottom of the screen with the Players resources
+ */
 public class BottomBar extends JPanel {
 
-    public final static int INTERVAL = 50;
-    public final ArrayList<ArrayList<KComponent>> playerComponents = new ArrayList<>();
+    private final static int INTERVAL = 50;
+    private final ArrayList<ArrayList<KComponent>> playerComponents = new ArrayList<>();
 
+    /**
+     * Creates and initializes the resource information at the bottom
+     */
     public BottomBar() {
         setBackground(new Color(255, 255, 255, 255));
 
@@ -44,8 +50,12 @@ public class BottomBar extends JPanel {
 
     }
 
-
-    public void updatePlayer(ArrayList<KComponent> components, Player p) {
+    /**
+     * Update the displayed resources for the given player
+     * @param components Where to put the resources
+     * @param p The player for whom to display the resources
+     */
+    private void updatePlayer(ArrayList<KComponent> components, Player p) {
         ((JLabel) components.get(1).getComponent()).setText("Brick: " + p.getNumberResourcesType("BRICK"));
         ((JLabel) components.get(2).getComponent()).setText("Wool: " + p.getNumberResourcesType("WOOL"));
         ((JLabel) components.get(3).getComponent()).setText("Ore: " + p.getNumberResourcesType("ORE"));

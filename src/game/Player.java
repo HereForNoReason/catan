@@ -29,7 +29,7 @@ public class Player {
 
 
     /**
-     * Constructor takes params for assignment to fields
+     * Default constructor for normal gameplay
      *
      * @param n is the Player's name
      * @param c Color of the player

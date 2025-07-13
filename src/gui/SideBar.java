@@ -11,9 +11,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * The sidebar on the right containing the options for the players to choose from during gameplay
+ */
 public class SideBar extends JPanel {
 
-    public final static int INTERVAL = 50;
+    private final static int INTERVAL = 50;
     private final GameWindow display;
     private final Font font = new Font("Arial", Font.BOLD, 16);
     private final ComponentList rollPanel = new ComponentList();
@@ -44,6 +47,10 @@ public class SideBar extends JPanel {
     private int flag = 0;
     private Timer timer;
 
+    /**
+     * Create the Sidebar
+     * @param display The GameWindow in which this sidebar is displayed
+     */
     public SideBar(final GameWindow display) {
         setBackground(new Color(255, 255, 255, 255));
         //pool = Executors.newSingleThreadExecutor();
@@ -759,38 +766,38 @@ public class SideBar extends JPanel {
         validate();
     }
 
-    public void buyPanel() {
+    private void buyPanel() {
         setPanel(buyPanel);
         flag = 2;
     }
 
-    public void tradePanel() {
+    private void tradePanel() {
         setPanel(tradePanel);
         flag = 1;
     }
 
-    public void rollPanel() {
+    private void rollPanel() {
         setCurrentPlayer(GameRunner.getCurrentPlayer());
         setPanel(rollPanel);
         flag = 0;
     }
 
-    public void mainPanel() {
+    private void mainPanel() {
         setPanel(mainPanel);
         flag = 0;
     }
 
-    public void errorPanel(String str) {
+    private void errorPanel(String str) {
         ((JLabel) errorPanel.get(0).getComponent()).setText(str);
         setPanel(errorPanel);
     }
 
 
-    public void resPanel() {
+    private void resPanel() {
         setPanel(resPanel);
     }
 
-    public void stealPanel() {
+    private void stealPanel() {
         //JComboBox<Player> newBox = new JComboBox<Player>();
         AbstractAction action = (AbstractAction) ((JComboBox<Player>) stealPanel.get(0).getComponent()).getAction();
         ((JComboBox<Player>) stealPanel.get(0).getComponent()).setAction(new AbstractAction() {
@@ -814,7 +821,7 @@ public class SideBar extends JPanel {
         }
     }
 
-    public void choosePlayerPanel() {
+    private void choosePlayerPanel() {
         AbstractAction action = (AbstractAction) ((JComboBox<Player>) choosePlayerPanel.get(0).getComponent()).getAction();
         // Remove action, so that removeAllItems() does not trigger an event
         ((JComboBox<Player>) choosePlayerPanel.get(0).getComponent()).setAction(new AbstractAction() {
@@ -835,12 +842,12 @@ public class SideBar extends JPanel {
         setPanel(choosePlayerPanel);
     }
 
-    public void placePanel(String str) {
+    private void placePanel(String str) {
         ((JLabel) placePanel.get(0).getComponent()).setText(str);
         setPanel(placePanel);
     }
 
-    public void placeCancelPanel(String str) {
+    private void placeCancelPanel(String str) {
         ((JLabel) cancelPlacePanel.get(0).getComponent()).setText(str);
         setPanel(cancelPlacePanel);
     }
@@ -850,7 +857,7 @@ public class SideBar extends JPanel {
      * @param p   the player inputting resources
      * @param str to display "on submit" button
      */
-    public void inputResourcesPanel(final int n, final Player p, String str, final boolean YOP) {
+    private void inputResourcesPanel(final int n, final Player p, String str, final boolean YOP) {
         //final ArrayList<String> output = new ArrayList<String>();
         IRPDone = false;
 
@@ -937,18 +944,18 @@ public class SideBar extends JPanel {
 
     }
 
-    public void setCurrentPlayer(Player p) {
+    private void setCurrentPlayer(Player p) {
         JLabel label = (JLabel) currentPlayerBox.getComponent();
         label.setText("Player: " + p.getName());
         label.setOpaque(true);
         label.setBackground(GameRunner.getCurrentPlayer().getColor());
     }
 
-    public void setupPanel() {
+    private void setupPanel() {
         setPanel(setupPanel);
     }
 
-    public void winPanel() {
+    private void winPanel() {
         this.removeAll();
 
         JLabel win = new JLabel(GameRunner.getWinner().getName() + " wins!");

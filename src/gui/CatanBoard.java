@@ -12,23 +12,25 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
-
+/**
+ * Represents the main portion of the window, the area where the actual board is located
+ */
 public class CatanBoard extends JPanel {
 
     private final double sqrt3div2 = 0.86602540378;
     private final int structSize = 12;
-    //0 = none
-    //1 = choosing tile
-    //2 = choosing settlement
-    //3 = choosing road
-    //4 = choosing city
-    //5 = choosing setup settlements
     private final Game game;
     private final int heightMargin = 100;
     private final Tile[][] tiles;
     private final Road[][][] roads;
     private final Structure[][][] structures;
     private int state = 0;
+    //0 = none
+    //1 = choosing tile
+    //2 = choosing settlement
+    //3 = choosing road
+    //4 = choosing city
+    //5 = choosing setup settlements
     private int boardHeight;
     private int hexagonSide;
     private int widthMargin;
@@ -38,6 +40,10 @@ public class CatanBoard extends JPanel {
     private boolean capitol = false;
 
 
+    /**
+     * Creates a new board with the given list of players to play
+     * @param players Players that are part
+     */
     public CatanBoard(ArrayList<Player> players) {
 
         game = new Game(players);
@@ -74,6 +80,11 @@ public class CatanBoard extends JPanel {
         //addMouseMotionListener((MouseMotionListener) m);
     }
 
+    /**
+     * @see JComponent#paintComponent(Graphics)
+     * @param g the <code>Graphics</code> object to protect
+     */
+    @Override
     public void paintComponent(Graphics g) {
 
         boardHeight = getHeight();
@@ -195,15 +206,36 @@ public class CatanBoard extends JPanel {
         labelPorts(g2);
     }
 
+    /**
+     * Get the current state the board is in
+     * <ul>
+     *     <li> 0 = none </li>
+     *     <li> 1 = choosing tile </li>
+     *     <li> 2 = choosing settlement </li>
+     *     <li> 3 = choosing road </li>
+     *     <li> 4 = choosing city </li>
+     *     <li> 5 = choosing setup settlements </li>
+     * </ul>
+     * @return The current state
+     */
     public int getState() {
         return state;
     }
 
+    /**
+     * Set the state for the board selection.
+     * See {@link #getState()} for the meaning of newState.
+     * @param newState The new state the board will switch to.
+     */
     public void setState(int newState) {
         state = newState;
     }
 
-    public void labelPorts(Graphics2D g2) {
+    /**
+     * Draw the labels for the ports
+     * @param g2 THe Graphic to draw on
+     */
+    private void labelPorts(Graphics2D g2) {
         Graphics2D g2c = (Graphics2D) g2.create();
 
         //Sheep 2:1
@@ -316,7 +348,8 @@ public class CatanBoard extends JPanel {
 
     }
 
-    public Polygon makeHex(Point center) {
+
+    private Polygon makeHex(Point center) {
         int xCenter = (int) center.getX();
         int yCenter = (int) center.getY();
 
@@ -332,7 +365,7 @@ public class CatanBoard extends JPanel {
         return output;
     }
 
-    public void drawHex(Tile tile, Graphics2D g2) {
+    private void drawHex(Tile tile, Graphics2D g2) {
         int x = tile.getLocation().getXCoord();
         int y = tile.getLocation().getYCoord();
         Polygon poly = makeHex(findCenter(x, y));
@@ -366,7 +399,7 @@ public class CatanBoard extends JPanel {
         g2.drawPolygon(poly);
     }
 
-    public void highlightTile(Location loc, Graphics2D g2) {
+    private void highlightTile(Location loc, Graphics2D g2) {
         int x = loc.getXCoord();
         int y = loc.getYCoord();
         if (tiles[x][y].hasRobber()) {
@@ -380,7 +413,7 @@ public class CatanBoard extends JPanel {
         g2.draw(shape);
     }
 
-    public void drawNumber(Tile tile, Graphics2D g2) {
+    private void drawNumber(Tile tile, Graphics2D g2) {
         if (tile.getNumber() == 0) {
             return;
         }
@@ -394,7 +427,7 @@ public class CatanBoard extends JPanel {
         g2.drawString("" + tile.getNumber(), (int) p.getX() - 5, (int) p.getY() + 5);
     }
 
-    public void drawRobber(Tile tile, Graphics2D g2) {
+    private void drawRobber(Tile tile, Graphics2D g2) {
         if (!tile.hasRobber()) {
             return;
         }
@@ -409,7 +442,7 @@ public class CatanBoard extends JPanel {
         g2.draw(shape);
     }
 
-    public void drawRoad(Road r, boolean highlighted, Graphics2D g2) {
+    private void drawRoad(Road r, boolean highlighted, Graphics2D g2) {
         Player player = r.getOwner();
         Graphics2D g2c = (Graphics2D) g2.create();
         if (player == null) {
@@ -451,7 +484,7 @@ public class CatanBoard extends JPanel {
         g2c.draw(rect);
     }
 
-    public void drawStructure(Structure s, boolean highlighted, Graphics2D g2) {
+    private void drawStructure(Structure s, boolean highlighted, Graphics2D g2) {
         Player player = s.getOwner();
         if (state == 2 || state == 5) {
             if (player == null) {
@@ -508,7 +541,7 @@ public class CatanBoard extends JPanel {
 
     }
 
-    public Point findCenter(int x, int y) {
+    private Point findCenter(int x, int y) {
         int xCenter = widthMargin + (int) (3 * hexagonSide * sqrt3div2)
                 + (int) ((x - 1) * 2 * hexagonSide * sqrt3div2)
                 - (int) ((y - 1) * hexagonSide * sqrt3div2);
@@ -518,7 +551,7 @@ public class CatanBoard extends JPanel {
         return new Point(xCenter, yCenter);
     }
 
-    public Location pxToTile(Point p) {
+    private Location pxToTile(Point p) {
         double x = p.getX();
         double y = p.getY();
 
@@ -603,7 +636,7 @@ public class CatanBoard extends JPanel {
         return new Location(xCoord, yCoord);
     }
 
-    public VertexLocation pxToStructure(Point p) {
+    private VertexLocation pxToStructure(Point p) {
         double x = p.getX();
         double y = p.getY();
 
@@ -882,7 +915,7 @@ public class CatanBoard extends JPanel {
         return new VertexLocation(xCoord, yCoord, orient);
     }
 
-    public EdgeLocation pxToRoad(Point p) {
+    private EdgeLocation pxToRoad(Point p) {
         int x = (int) p.getX();
         int y = boardHeight - heightMargin - (int) p.getY();
         EdgeLocation output = null;
@@ -983,6 +1016,10 @@ public class CatanBoard extends JPanel {
         return output;
     }
 
+    /**
+     * Get the game instance associated with this window
+     * @return The current game
+     */
     public Game getGame() {
         return game;
     }
@@ -997,16 +1034,29 @@ public class CatanBoard extends JPanel {
         state = 2;
     }
 
+    /**
+     * Puts CatanBoard in placing road state
+     *
+     * @param s how many to be placed
+     */
     public void placeRoad(int s) {
         index = s;
         state = 3;
     }
 
+    /**
+     * Puts CatanBoard in placing city state
+     *
+     * @param s how many to be placed
+     */
     public void placeCity(int s) {
         index = s;
         state = 4;
     }
 
+    /**
+     * Puts CatanBoard in placing robber state
+     */
     public void placeRobber() {
         index = 1;
         state = 1;

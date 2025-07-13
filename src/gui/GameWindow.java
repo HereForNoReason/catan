@@ -7,16 +7,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-
+/**
+ * The Main game window
+ */
 public class GameWindow {
 
-    public final static int INTERVAL = 20;
-    final static int scrSize = 1000; //TODO specify
-    final CatanBoard board;
-    final BottomBar bottom;
-    SideBar side;
+    private final static int INTERVAL = 20;
+    private final static int scrSize = 1000; //TODO specify
+    private final CatanBoard board;
+    private final BottomBar bottom;
 
-
+    /**
+     * Create a new game with window with the given players
+     * @param players Players that are playing
+     */
     public GameWindow(ArrayList<Player> players) {
         board = new CatanBoard(players);
         bottom = new BottomBar();
@@ -46,7 +50,7 @@ public class GameWindow {
         //content.add(board);
         content.add(board, new Rectangle(0, 0, 4, 4));
 
-        side = new SideBar(this);
+        SideBar side = new SideBar(this);
         content.add(side, new Rectangle(4, 0, 1, 4));
 
         content.add(bottom, new Rectangle(0, 4, 5, 2));
@@ -60,6 +64,10 @@ public class GameWindow {
         board.repaint();
     }
 
+    /**
+     * Get the visual board for this window
+     * @return The visual board
+     */
     public CatanBoard getBoard() {
         return board;
     }

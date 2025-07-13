@@ -100,7 +100,7 @@ public class GraphPaperLayout implements LayoutManager2 {
         compTable = new Hashtable<>();
     }
 
-    public void setConstraints(Component comp, Rectangle constraints) {
+    private void setConstraints(Component comp, Rectangle constraints) {
         compTable.put(comp, new Rectangle(constraints));
     }
 

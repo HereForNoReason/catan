@@ -18,6 +18,8 @@ public class GameRunner {
     private static int index = 0;
     private static Player winner;
 
+    private GameRunner() {}
+
     public static void main(String[] args) {
         start();
     }
@@ -30,8 +32,7 @@ public class GameRunner {
      */
     private static String getPlayerName(int id) {
         String playerName = "";
-        String finalPlayerName = playerName;
-        while (playerName.isEmpty() || players.stream().anyMatch(p -> p.getName().equals(finalPlayerName))) {
+        while (playerName.isEmpty()) {
             playerName = JOptionPane.showInputDialog("Player " + id + ", please enter your name");
             if (playerName == null) // Cancel
                 System.exit(0);
