@@ -52,8 +52,9 @@ public class BottomBar extends JPanel {
 
     /**
      * Update the displayed resources for the given player
+     *
      * @param components Where to put the resources
-     * @param p The player for whom to display the resources
+     * @param p          The player for whom to display the resources
      */
     private void updatePlayer(ArrayList<KComponent> components, Player p) {
         ((JLabel) components.get(1).getComponent()).setText("Brick: " + p.getNumberResourcesType("BRICK"));

@@ -19,6 +19,7 @@ public class GameWindow {
 
     /**
      * Create a new game with window with the given players
+     *
      * @param players Players that are playing
      */
     public GameWindow(ArrayList<Player> players) {
@@ -66,6 +67,7 @@ public class GameWindow {
 
     /**
      * Get the visual board for this window
+     *
      * @return The visual board
      */
     public CatanBoard getBoard() {

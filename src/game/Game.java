@@ -328,12 +328,13 @@ public class Game {
     /**
      * Places a Road for the given Player at the given EdgeLocation
      *
-     * @param p   the Player placing
-     * @param loc the EdgeLocation to place the ROad
+     * @param p       the Player placing
+     * @param loc     the EdgeLocation to place the Road
+     * @param initial Whether the road is part of the initial setup
      * @return whether the Road can go there
      */
-    public boolean placeRoad(EdgeLocation loc, Player p) {
-        if (!board.placeRoad(loc, p)) {
+    public boolean placeRoad(EdgeLocation loc, Player p, boolean initial) {
+        if (!board.placeRoad(loc, p, initial)) {
             return false;
         }
 

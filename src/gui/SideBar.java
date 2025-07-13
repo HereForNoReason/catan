@@ -49,6 +49,7 @@ public class SideBar extends JPanel {
 
     /**
      * Create the Sidebar
+     *
      * @param display The GameWindow in which this sidebar is displayed
      */
     public SideBar(final GameWindow display) {
@@ -567,7 +568,7 @@ public class SideBar extends JPanel {
                                     if (display.getBoard().getState() != 5) {
                                         timer.stop();
                                         //Place Road commandblock
-                                        display.getBoard().placeRoad(1);
+                                        display.getBoard().placeInitialRoad(1);
                                         placePanel("Place a road...");
                                         timer = new Timer(INTERVAL,
                                                 evt7 -> {
@@ -594,7 +595,7 @@ public class SideBar extends JPanel {
                                     if (display.getBoard().getState() != 5) {
                                         timer.stop();
                                         //Place Road commandblock
-                                        display.getBoard().placeRoad(1);
+                                        display.getBoard().placeInitialRoad(1);
                                         placePanel("Place a road...");
                                         timer = new Timer(INTERVAL,
                                                 evt8 -> {
@@ -624,7 +625,7 @@ public class SideBar extends JPanel {
                                     if (display.getBoard().getState() != 5) {
                                         timer.stop();
                                         //Place Road commandblock
-                                        display.getBoard().placeRoad(1);
+                                        display.getBoard().placeInitialRoad(1);
                                         placePanel("Place a road...");
                                         timer = new Timer(INTERVAL,
                                                 evt9 -> {
@@ -651,7 +652,7 @@ public class SideBar extends JPanel {
                                     if (display.getBoard().getState() != 5) {
                                         timer.stop();
                                         //Place Road commandblock
-                                        display.getBoard().placeRoad(1);
+                                        display.getBoard().placeInitialRoad(1);
                                         placePanel("Place a road...");
                                         timer = new Timer(INTERVAL,
                                                 evt10 -> {

@@ -42,6 +42,7 @@ public class CatanBoard extends JPanel {
 
     /**
      * Creates a new board with the given list of players to play
+     *
      * @param players Players that are part
      */
     public CatanBoard(ArrayList<Player> players) {
@@ -81,8 +82,8 @@ public class CatanBoard extends JPanel {
     }
 
     /**
-     * @see JComponent#paintComponent(Graphics)
      * @param g the <code>Graphics</code> object to protect
+     * @see JComponent#paintComponent(Graphics)
      */
     @Override
     public void paintComponent(Graphics g) {
@@ -199,7 +200,7 @@ public class CatanBoard extends JPanel {
         } else if (state == 3) {
             EdgeLocation loc = pxToRoad(p);
 
-            if (loc != null && game.getBoard().canPlaceRoad(loc, GameRunner.getCurrentPlayer())) {
+            if (loc != null && game.getBoard().canPlaceRoad(loc, GameRunner.getCurrentPlayer(), capitol)) {
                 drawRoad(roads[loc.getXCoord()][loc.getYCoord()][loc.getOrientation()], true, g2);
             }
         }
@@ -216,6 +217,7 @@ public class CatanBoard extends JPanel {
      *     <li> 4 = choosing city </li>
      *     <li> 5 = choosing setup settlements </li>
      * </ul>
+     *
      * @return The current state
      */
     public int getState() {
@@ -225,6 +227,7 @@ public class CatanBoard extends JPanel {
     /**
      * Set the state for the board selection.
      * See {@link #getState()} for the meaning of newState.
+     *
      * @param newState The new state the board will switch to.
      */
     public void setState(int newState) {
@@ -233,6 +236,7 @@ public class CatanBoard extends JPanel {
 
     /**
      * Draw the labels for the ports
+     *
      * @param g2 THe Graphic to draw on
      */
     private void labelPorts(Graphics2D g2) {
@@ -1018,6 +1022,7 @@ public class CatanBoard extends JPanel {
 
     /**
      * Get the game instance associated with this window
+     *
      * @return The current game
      */
     public Game getGame() {
@@ -1042,6 +1047,18 @@ public class CatanBoard extends JPanel {
     public void placeRoad(int s) {
         index = s;
         state = 3;
+        capitol = false;
+    }
+
+    /**
+     * Puts CatanBoard in placing initial road state
+     *
+     * @param s how many to be placed
+     */
+    public void placeInitialRoad(int s) {
+        index = s;
+        state = 3;
+        capitol = true;
     }
 
     /**
@@ -1070,6 +1087,7 @@ public class CatanBoard extends JPanel {
     public void placeSettlementNoRoad(int s) {
         index = s;
         state = 5;
+        capitol = false;
     }
 
     /**
@@ -1109,8 +1127,9 @@ public class CatanBoard extends JPanel {
             } else if (state == 3) {
                 EdgeLocation loc = pxToRoad(p);
                 if (loc != null) {
-                    if (game.placeRoad(loc, GameRunner.getCurrentPlayer())) {
-                        game.buyRoad(GameRunner.getCurrentPlayer());
+                    if (game.placeRoad(loc, GameRunner.getCurrentPlayer(), capitol)) {
+                        if (!capitol)
+                            game.buyRoad(GameRunner.getCurrentPlayer());
                         index--;
                     }
                     if (index == 0) {

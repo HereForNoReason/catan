@@ -18,7 +18,8 @@ public class GameRunner {
     private static int index = 0;
     private static Player winner;
 
-    private GameRunner() {}
+    private GameRunner() {
+    }
 
     public static void main(String[] args) {
         start();

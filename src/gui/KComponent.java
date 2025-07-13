@@ -13,8 +13,9 @@ public class KComponent {
 
     /**
      * Wraps a component with a position
+     *
      * @param jC The component to wrap
-     * @param r The position and size of the component
+     * @param r  The position and size of the component
      */
     public KComponent(JComponent jC, Rectangle r) {
         jComp = jC;
@@ -23,6 +24,7 @@ public class KComponent {
 
     /**
      * Gets the wrapped component
+     *
      * @return The wrapped component
      */
     public JComponent getComponent() {
@@ -31,6 +33,7 @@ public class KComponent {
 
     /**
      * Gets the position for the component
+     *
      * @return The position for the component
      */
     public Rectangle getRectangle() {

@@ -18,8 +18,9 @@ public class ComponentList extends ArrayList<KComponent> {
 
     /**
      * Add the component inside the specified Rectangle
+     *
      * @param jC Component to add
-     * @param r Location of the Component
+     * @param r  Location of the Component
      */
     public void add(JComponent jC, Rectangle r) {
         super.add(new KComponent(jC, r));
